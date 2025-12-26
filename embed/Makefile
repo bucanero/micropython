@@ -155,6 +155,7 @@ TR_SRC_EXTMOD_C = $(addprefix $(BUILD)/extmod/,\
 	moduheapq.c \
 	moduhashlib.c \
 	modubinascii.c \
+	moducrypto.c \
 	)
 
 #	py/mpstate.c \

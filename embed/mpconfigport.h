@@ -19,7 +19,7 @@
 #define MICROPY_DEBUG_PRINTERS      (0)
 #define MICROPY_REPL_EVENT_DRIVEN   (0)
 #define MICROPY_HELPER_REPL         (1)
-#define MICROPY_HELPER_LEXER_UNIX   (1)
+#define MICROPY_HELPER_LEXER_UNIX   (0)
 #define MICROPY_ENABLE_SOURCE_LINE  (1)
 #define MICROPY_ENABLE_DOC_STRING   (0)
 #define MICROPY_ERROR_REPORTING     (MICROPY_ERROR_REPORTING_NORMAL)
@@ -50,8 +50,8 @@
 #define MICROPY_PY_IO               (0)
 #define MICROPY_PY_STRUCT           (1)
 #define MICROPY_PY_SYS              (1)
-#define MICROPY_PY_SYS_EXIT         (1)
-#define MICROPY_PY_SYS_PLATFORM     "linux"
+#define MICROPY_PY_SYS_EXIT         (0)
+#define MICROPY_PY_SYS_PLATFORM     "apollo-playstation"
 #define MICROPY_PY_SYS_MAXSIZE      (1)
 
 #define MICROPY_PY_UCTYPES          (1)
@@ -61,7 +61,8 @@
 #define MICROPY_PY_UHEAPQ           (1)
 #define MICROPY_PY_UHASHLIB         (1)
 #define MICROPY_PY_UBINASCII        (1)
-#define MICROPY_PY_MACHINE          (1)
+#define MICROPY_PY_UCRYPTO          (1)
+#define MICROPY_PY_MACHINE          (0)
 
 extern const struct _mp_obj_module_t mp_module_os;
 extern const struct _mp_obj_module_t mp_module_time;
@@ -119,8 +120,8 @@ void mp_hal_stdout_tx_strn_cooked(const char *str, mp_uint_t len);
 
 static inline void mp_hal_set_interrupt_char(char c) {}
 
-#define MICROPY_HW_BOARD_NAME "minimal"
-#define MICROPY_HW_MCU_NAME "unknown-cpu"
+#define MICROPY_HW_BOARD_NAME "apollo"
+#define MICROPY_HW_MCU_NAME "playstation-cpu"
 
 #ifdef __linux__
 #define MICROPY_MIN_USE_STDOUT (1)
