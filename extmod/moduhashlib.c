@@ -89,7 +89,7 @@ MP_DECLARE_CONST_FUN_OBJ(mod_uhashlib_djb2_obj);
 
 
 /*
- * append_le_uint16: append an unsigned 16 bits Little Endian
+ * write_le_uint16: append an unsigned 16 bits Little Endian
  * value to a buffer
  */
 #define write_le_uint16(buf, val) \
@@ -101,7 +101,7 @@ MP_DECLARE_CONST_FUN_OBJ(mod_uhashlib_djb2_obj);
 	buf[0] = (uint8_t)(val >> 8);
 
 /*
- * append_le_uint32: append an unsigned 32 bits Little Endian
+ * write_le_uint32: append an unsigned 32 bits Little Endian
  * value to a buffer
  */
 #define write_le_uint32(buf, val) \
@@ -117,7 +117,7 @@ MP_DECLARE_CONST_FUN_OBJ(mod_uhashlib_djb2_obj);
 	buf[0] = (uint8_t)(val >> 24);
 
 /*
- * append_le_uint64: append an unsigned 64 bits Little Endian
+ * write_le_uint64: append an unsigned 64 bits Little Endian
  * value to a buffer
  */
 #define write_le_uint64(buf, val) \
@@ -139,44 +139,6 @@ MP_DECLARE_CONST_FUN_OBJ(mod_uhashlib_djb2_obj);
     buf[2] = (uint8_t)(val >> 40); \
     buf[1] = (uint8_t)(val >> 48); \
     buf[0] = (uint8_t)(val >> 56);
-
-/*
- * read_le_uint16: read an unsigned 16 bits Little Endian
- * value from a buffer
- */
-#define read_le_uint16(buf) \
-    ((uint16_t)(buf[0]) | ((uint16_t)(buf[1]) << 8))
-
-#define read_be_uint16(buf) \
-    ((uint16_t)(buf[1]) | ((uint16_t)(buf[0]) << 8))
-
-/*
- * read_le_uint32: read an unsigned 32 bits Little Endian
- * value from a buffer
- */
-#define read_le_uint32(buf) \
-    ((uint32_t)(buf[0]) | ((uint32_t)(buf[1]) << 8) | \
-    ((uint32_t)(buf[2]) << 16) | ((uint32_t)(buf[3]) << 24))
-
-#define read_be_uint32(buf) \
-    ((uint32_t)(buf[3]) | ((uint32_t)(buf[2]) << 8) | \
-    ((uint32_t)(buf[1]) << 16) | ((uint32_t)(buf[0]) << 24))
-
-/*
- * read_le_uint64: read an unsigned 64 bits Little Endian
- * value from a buffer
- */
-#define read_le_uint64(buf) \
-    ((uint64_t)(buf[0]) | ((uint64_t)(buf[1]) << 8) | \
-    ((uint64_t)(buf[2]) << 16) | ((uint64_t)(buf[3]) << 24) | \
-    ((uint64_t)(buf[4]) << 32) | ((uint64_t)(buf[5]) << 40) | \
-    ((uint64_t)(buf[6]) << 48) | ((uint64_t)(buf[7]) << 56))
-
-#define read_be_uint64(buf) \
-    ((uint64_t)(buf[7]) | ((uint64_t)(buf[6]) << 8) | \
-    ((uint64_t)(buf[5]) << 16) | ((uint64_t)(buf[4]) << 24) | \
-    ((uint64_t)(buf[3]) << 32) | ((uint64_t)(buf[2]) << 40) | \
-    ((uint64_t)(buf[1]) << 48) | ((uint64_t)(buf[0]) << 56))
 
 
 mp_obj_t mod_uhashlib_add(mp_obj_t data) {
