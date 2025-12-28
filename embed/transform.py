@@ -237,6 +237,9 @@ c_functions = (
     "aes_cbc_decrypt",
     "aes_cbc_encrypt",
     "aes_ctr_xcrypt",
+    #zlib
+    "inflate",
+    "deflate",
 )
 
 def x1_vm(m):

@@ -153,6 +153,7 @@ TR_SRC_EXTMOD_C = $(addprefix $(BUILD)/extmod/,\
 	modujson.c \
 	modure.c \
 	moduheapq.c \
+	moduzlib.c \
 	moduhashlib.c \
 	modubinascii.c \
 	moducrypto.c \

@@ -28,7 +28,6 @@
 #include "crc_util.h"
 
 // external definitions
-extern uint32_t adler32(uint32_t adler, const uint8_t *buf, uint32_t len);
 extern void sha1( const unsigned char *input, size_t ilen, unsigned char output[20] );
 extern void sha256( const unsigned char *input, size_t ilen, unsigned char output[32], int is224 );
 extern void sha512( const unsigned char *input, size_t ilen, unsigned char output[64], int is384 );
@@ -1018,7 +1017,6 @@ STATIC const mp_rom_map_elem_t mp_module_hashlib_globals_table[] = {
     { MP_ROM_QSTR(MP_QSTR_jhash), MP_ROM_PTR(&mod_uhashlib_jhash_obj) },
     { MP_ROM_QSTR(MP_QSTR_jenkins_oaat), MP_ROM_PTR(&mod_uhashlib_jenkins_oaat_obj) },
     { MP_ROM_QSTR(MP_QSTR_lookup3_little2), MP_ROM_PTR(&mod_uhashlib_lookup3_little2_obj) },
-    { MP_ROM_QSTR(MP_QSTR_djb2), MP_ROM_PTR(&mod_uhashlib_djb2_obj) },
     { MP_ROM_QSTR(MP_QSTR_djb2), MP_ROM_PTR(&mod_uhashlib_djb2_obj) },
     { MP_ROM_QSTR(MP_QSTR_eachecksum), MP_ROM_PTR(&mod_uhashlib_eachecksum_obj) },
     { MP_ROM_QSTR(MP_QSTR_ffx_checksum), MP_ROM_PTR(&mod_uhashlib_ffx_checksum_obj) },
