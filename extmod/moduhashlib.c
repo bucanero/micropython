@@ -140,6 +140,20 @@ MP_DECLARE_CONST_FUN_OBJ(mod_uhashlib_djb2_obj);
     buf[1] = (uint8_t)(val >> 48); \
     buf[0] = (uint8_t)(val >> 56);
 
+/*
+ * read_be_uint64: read an unsigned 64 bits Big Endian
+ * value from a buffer
+ */
+#define read_be_uint64(buf) \
+    ((uint64_t)(buf[7]) | ((uint64_t)(buf[6]) << 8) | \
+    ((uint64_t)(buf[5]) << 16) | ((uint64_t)(buf[4]) << 24) | \
+    ((uint64_t)(buf[3]) << 32) | ((uint64_t)(buf[2]) << 40) | \
+    ((uint64_t)(buf[1]) << 48) | ((uint64_t)(buf[0]) << 56))
+
+#define parse_uint64_from_obj(obj, buf, ret) \
+    mp_set_unaligned(UINT64, buf, true, obj); \
+    ret = read_be_uint64(buf);
+
 
 mp_obj_t mod_uhashlib_add(mp_obj_t data) {
     mp_buffer_info_t bufinfo;
@@ -298,6 +312,7 @@ mp_obj_t mod_uhashlib_checksum32(mp_obj_t data) {
 MP_DEFINE_CONST_FUN_OBJ_1(mod_uhashlib_checksum32_obj, mod_uhashlib_checksum32);
 
 mp_obj_t mod_uhashlib_crc(size_t n_args, const mp_obj_t *args) {
+    uint8_t buf[0x10] = {0};
     mp_buffer_info_t bufinfo;
     mp_get_buffer_raise(args[0], &bufinfo, MP_BUFFER_READ);
 
@@ -311,12 +326,12 @@ mp_obj_t mod_uhashlib_crc(size_t n_args, const mp_obj_t *args) {
     byte *out;
     custom_crc_t crc_opts = {
         .width = width,
-        .poly = mp_obj_int_get_truncated(args[2]),
-        .init = mp_obj_int_get_truncated(args[3]),
-        .xor = mp_obj_int_get_truncated(args[4]),
         .refIn = mp_obj_int_get_truncated(args[5]),
         .refOut = mp_obj_int_get_truncated(args[6]),
     };
+    parse_uint64_from_obj(args[2], buf, crc_opts.poly);
+    parse_uint64_from_obj(args[3], buf, crc_opts.init);
+    parse_uint64_from_obj(args[4], buf, crc_opts.xor);
 
     switch (width)
     {
@@ -487,7 +502,7 @@ mp_obj_t mod_uhashlib_fnv1(size_t n_args, const mp_obj_t *args) {
     vstr_init_len(&vstr, 4);
     byte *out = (byte*)vstr.buf;
 
-    uint32_t init_val = 0x811c9dc5;
+    uint32_t init_val = FNV1_INIT_VALUE;
     if (n_args > 1) {
         // custom initial value
         init_val = mp_obj_int_get_truncated(args[1]);
