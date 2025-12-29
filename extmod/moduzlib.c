@@ -35,6 +35,11 @@ extern int offzip_search(FILE *fd);
 extern int offzip_verify(FILE *fd, uint32_t *offset, uint32_t *inlen, uint32_t *outlen);
 extern void offzip_free(void);
 
+#if defined(_MSC_VER) || defined(__MINGW32__) || defined(__MINGW64__)
+/* https://github.com/Arryboom/fmemopen_windows  */
+extern FILE *fmemopen(void *buf, size_t len, const char *type);
+#endif
+
 /**
  * @brief Decompress data from input buffer to dynamically allocated output buffer
  * 
