@@ -30,6 +30,11 @@
 
 #define CHUNK_SIZE 16384  // Initial chunk size for output buffer
 
+extern int offzip_init(int wbits);
+extern int offzip_search(FILE *fd);
+extern int offzip_verify(FILE *fd, uint32_t *offset, uint32_t *inlen, uint32_t *outlen);
+extern void offzip_free(void);
+
 /**
  * @brief Decompress data from input buffer to dynamically allocated output buffer
  * 
@@ -152,8 +157,8 @@ bool micropy_compress_buffer(struct _mp_state_ctx_t *mp_state,
     
     vstr_add_strn(compressed_out, (const char*)compressed, max_compressed_size - stream.avail_out);
     deflateEnd(&stream);
-    
     free(compressed);
+    
     return true;
 }
 
@@ -211,12 +216,57 @@ STATIC mp_obj_t mod_uzlib_compress(size_t n_args, const mp_obj_t *args) {
 }
 STATIC MP_DEFINE_CONST_FUN_OBJ_VAR_BETWEEN(mod_uzlib_compress_obj, 1, 3, mod_uzlib_compress);
 
+STATIC mp_obj_t mod_uzlib_offzip(size_t n_args, const mp_obj_t *args) {
+    mp_buffer_info_t bufinfo;
+    mp_obj_t list;
+
+    mp_get_buffer_raise(args[0], &bufinfo, MP_BUFFER_READ);
+
+    int wbits = MAX_WBITS;
+    if (n_args > 1) {
+        // custom window value
+        wbits = mp_obj_int_get_truncated(args[1]);
+    }
+
+    if (offzip_init(wbits) != Z_OK) {
+        nlr_raise(mp_obj_new_exception_msg_varg(&mp_type_ValueError, "offZip init error"));
+    }
+
+    list = mp_obj_new_list(0, NULL);
+    FILE* fd = fmemopen(bufinfo.buf, bufinfo.len, "rb");
+
+    while (offzip_search(fd) == Z_OK)
+    {
+        mp_obj_t items[3];
+        uint32_t offz = 0, inlen = 0, outlen = 0;
+
+        if (offzip_verify(fd, &offz, &inlen, &outlen) != Z_OK) {
+            DEBUG_printf("offZip unzip error\n");
+            continue;
+        }
+
+        items[0] = mp_obj_new_int_from_uint(offz);
+        items[1] = mp_obj_new_int_from_uint(inlen);
+        items[2] = mp_obj_new_int_from_uint(outlen);
+        mp_obj_list_append(list, mp_obj_new_tuple(3, items));
+
+        DEBUG_printf("Found compressed block at offset 0x%08x: %d -> %d\n", offz, inlen, outlen);
+    }
+
+    offzip_free();
+    fclose(fd);
+
+    return list;
+}
+STATIC MP_DEFINE_CONST_FUN_OBJ_VAR_BETWEEN(mod_uzlib_offzip_obj, 1, 2, mod_uzlib_offzip);
+
 #if MICROPY_PY_UZLIB
 
 STATIC const mp_rom_map_elem_t mp_module_uzlib_globals_table[] = {
     { MP_ROM_QSTR(MP_QSTR___name__), MP_ROM_QSTR(MP_QSTR_uzlib) },
     { MP_ROM_QSTR(MP_QSTR_compress), MP_ROM_PTR(&mod_uzlib_compress_obj) },
     { MP_ROM_QSTR(MP_QSTR_decompress), MP_ROM_PTR(&mod_uzlib_decompress_obj) },
+    { MP_ROM_QSTR(MP_QSTR_offzip), MP_ROM_PTR(&mod_uzlib_offzip_obj) },
 };
 
 STATIC MP_DEFINE_CONST_DICT(mp_module_uzlib_globals, mp_module_uzlib_globals_table);

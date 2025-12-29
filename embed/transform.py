@@ -240,6 +240,12 @@ c_functions = (
     #zlib
     "inflate",
     "deflate",
+    "offzip_init",
+    "offzip_free",
+    "offzip_verify",
+    "offzip_search",
+    "fmemopen",
+    "fclose",
 )
 
 def x1_vm(m):
