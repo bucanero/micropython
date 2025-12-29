@@ -254,7 +254,7 @@ STATIC mp_obj_t mod_uzlib_offzip(size_t n_args, const mp_obj_t *args) {
     }
 
     offzip_free();
-    fclose(fd);
+    fclose (fd);
 
     return list;
 }
