@@ -155,132 +155,105 @@ MP_DECLARE_CONST_FUN_OBJ(mod_uhashlib_djb2_obj);
 
 
 mp_obj_t mod_uhashlib_add(mp_obj_t data) {
+    uint8_t out[4];
     mp_buffer_info_t bufinfo;
     mp_get_buffer_raise(data, &bufinfo, MP_BUFFER_READ);
-
-    vstr_t vstr;
-    vstr_init_len(&vstr, 4);
-    byte *out = (byte*)vstr.buf;
 
     uint32_t crc = add_hash(bufinfo.buf, bufinfo.len);
     write_be_uint32(out, crc);
 
-    return mp_obj_new_str_from_vstr(&mp_type_bytes, &vstr);
+    return mp_obj_new_bytearray(sizeof(out), out);
 }
 MP_DEFINE_CONST_FUN_OBJ_1(mod_uhashlib_add_obj, mod_uhashlib_add);
 
 mp_obj_t mod_uhashlib_wadd(mp_obj_t data) {
+    uint8_t out[4];
     mp_buffer_info_t bufinfo;
     mp_get_buffer_raise(data, &bufinfo, MP_BUFFER_READ);
-
-    vstr_t vstr;
-    vstr_init_len(&vstr, 4);
-    byte *out = (byte*)vstr.buf;
 
     uint32_t crc = wadd_hash(bufinfo.buf, bufinfo.len, 0);
     write_be_uint32(out, crc);
 
-    return mp_obj_new_str_from_vstr(&mp_type_bytes, &vstr);
+    return mp_obj_new_bytearray(sizeof(out), out);
 }
 MP_DEFINE_CONST_FUN_OBJ_1(mod_uhashlib_wadd_obj, mod_uhashlib_wadd);
 
 mp_obj_t mod_uhashlib_wadd_le(mp_obj_t data) {
+    uint8_t out[4];
     mp_buffer_info_t bufinfo;
     mp_get_buffer_raise(data, &bufinfo, MP_BUFFER_READ);
-
-    vstr_t vstr;
-    vstr_init_len(&vstr, 4);
-    byte *out = (byte*)vstr.buf;
 
     uint32_t crc = wadd_hash(bufinfo.buf, bufinfo.len, 1);
     write_be_uint32(out, crc);
 
-    return mp_obj_new_str_from_vstr(&mp_type_bytes, &vstr);
+    return mp_obj_new_bytearray(sizeof(out), out);
 }
 MP_DEFINE_CONST_FUN_OBJ_1(mod_uhashlib_wadd_le_obj, mod_uhashlib_wadd_le);
 
 mp_obj_t mod_uhashlib_dwadd(mp_obj_t data) {
+    uint8_t out[4];
     mp_buffer_info_t bufinfo;
     mp_get_buffer_raise(data, &bufinfo, MP_BUFFER_READ);
-
-    vstr_t vstr;
-    vstr_init_len(&vstr, 4);
-    byte *out = (byte*)vstr.buf;
 
     uint32_t crc = dwadd_hash(bufinfo.buf, bufinfo.len, 0);
     write_be_uint32(out, crc);
 
-    return mp_obj_new_str_from_vstr(&mp_type_bytes, &vstr);
+    return mp_obj_new_bytearray(sizeof(out), out);
 }
 MP_DEFINE_CONST_FUN_OBJ_1(mod_uhashlib_dwadd_obj, mod_uhashlib_dwadd);
 
 mp_obj_t mod_uhashlib_dwadd_le(mp_obj_t data) {
+    uint8_t out[4];
     mp_buffer_info_t bufinfo;
     mp_get_buffer_raise(data, &bufinfo, MP_BUFFER_READ);
-
-    vstr_t vstr;
-    vstr_init_len(&vstr, 4);
-    byte *out = (byte*)vstr.buf;
 
     uint32_t crc = dwadd_hash(bufinfo.buf, bufinfo.len, 1);
     write_be_uint32(out, crc);
 
-    return mp_obj_new_str_from_vstr(&mp_type_bytes, &vstr);
+    return mp_obj_new_bytearray(sizeof(out), out);
 }
 MP_DEFINE_CONST_FUN_OBJ_1(mod_uhashlib_dwadd_le_obj, mod_uhashlib_dwadd_le);
 
 mp_obj_t mod_uhashlib_qwadd(mp_obj_t data) {
+    uint8_t out[4];
     mp_buffer_info_t bufinfo;
     mp_get_buffer_raise(data, &bufinfo, MP_BUFFER_READ);
-
-    vstr_t vstr;
-    vstr_init_len(&vstr, 4);
-    byte *out = (byte*)vstr.buf;
 
     uint32_t crc = qwadd_hash(bufinfo.buf, bufinfo.len);
     write_be_uint32(out, crc);
 
-    return mp_obj_new_str_from_vstr(&mp_type_bytes, &vstr);
+    return mp_obj_new_bytearray(sizeof(out), out);
 }
 MP_DEFINE_CONST_FUN_OBJ_1(mod_uhashlib_qwadd_obj, mod_uhashlib_qwadd);
 
 mp_obj_t mod_uhashlib_wsub(mp_obj_t data) {
+    uint8_t out[4];
     mp_buffer_info_t bufinfo;
     mp_get_buffer_raise(data, &bufinfo, MP_BUFFER_READ);
-
-    vstr_t vstr;
-    vstr_init_len(&vstr, 4);
-    byte *out = (byte*)vstr.buf;
 
     uint32_t crc = wsub_hash(bufinfo.buf, bufinfo.len);
     write_be_uint32(out, crc);
 
-    return mp_obj_new_str_from_vstr(&mp_type_bytes, &vstr);
+    return mp_obj_new_bytearray(sizeof(out), out);
 }
 MP_DEFINE_CONST_FUN_OBJ_1(mod_uhashlib_wsub_obj, mod_uhashlib_wsub);
 
 mp_obj_t mod_uhashlib_adler16(mp_obj_t data) {
+    uint8_t out[2];
     mp_buffer_info_t bufinfo;
     mp_get_buffer_raise(data, &bufinfo, MP_BUFFER_READ);
-
-    vstr_t vstr;
-    vstr_init_len(&vstr, 2);
-    byte *out = (byte*)vstr.buf;
 
     uint16_t crc = adler16(bufinfo.buf, bufinfo.len);
     write_be_uint16(out, crc);
 
-    return mp_obj_new_str_from_vstr(&mp_type_bytes, &vstr);
+    return mp_obj_new_bytearray(2, out);
 }
 MP_DEFINE_CONST_FUN_OBJ_1(mod_uhashlib_adler16_obj, mod_uhashlib_adler16);
 
 mp_obj_t mod_uhashlib_adler32(size_t n_args, const mp_obj_t *args) {
+    uint8_t out[4];
     mp_buffer_info_t bufinfo;
     mp_get_buffer_raise(args[0], &bufinfo, MP_BUFFER_READ);
-
-    vstr_t vstr;
-    vstr_init_len(&vstr, 4);
-    byte *out = (byte*)vstr.buf;
 
     uint32_t crc = adler32(0L, NULL, 0);
     if (n_args > 1) {
@@ -291,22 +264,19 @@ mp_obj_t mod_uhashlib_adler32(size_t n_args, const mp_obj_t *args) {
     crc = adler32(crc, bufinfo.buf, bufinfo.len);
     write_be_uint32(out, crc);
 
-    return mp_obj_new_str_from_vstr(&mp_type_bytes, &vstr);
+    return mp_obj_new_bytearray(sizeof(out), out);
 }
 MP_DEFINE_CONST_FUN_OBJ_VAR_BETWEEN(mod_uhashlib_adler32_obj, 1, 2, mod_uhashlib_adler32);
 
 mp_obj_t mod_uhashlib_checksum32(mp_obj_t data) {
+    uint8_t out[4];
     mp_buffer_info_t bufinfo;
     mp_get_buffer_raise(data, &bufinfo, MP_BUFFER_READ);
-
-    vstr_t vstr;
-    vstr_init_len(&vstr, 4);
-    byte *out = (byte*)vstr.buf;
 
     uint32_t crc = Checksum32_hash(bufinfo.buf, bufinfo.len);
     write_be_uint32(out, crc);
 
-    return mp_obj_new_str_from_vstr(&mp_type_bytes, &vstr);
+    return mp_obj_new_bytearray(sizeof(out), out);
 }
 MP_DEFINE_CONST_FUN_OBJ_1(mod_uhashlib_checksum32_obj, mod_uhashlib_checksum32);
 
@@ -364,12 +334,9 @@ mp_obj_t mod_uhashlib_crc(size_t n_args, const mp_obj_t *args) {
 MP_DEFINE_CONST_FUN_OBJ_VAR_BETWEEN(mod_uhashlib_crc_obj, 7, 7, mod_uhashlib_crc);
 
 mp_obj_t mod_uhashlib_crc16(mp_obj_t data) {
+    uint8_t out[2];
     mp_buffer_info_t bufinfo;
     mp_get_buffer_raise(data, &bufinfo, MP_BUFFER_READ);
-
-    vstr_t vstr;
-    vstr_init_len(&vstr, 2);
-    byte *out = (byte*)vstr.buf;
 
     custom_crc_t crc_opts = {
         .init = CRC_16_INIT_VALUE,
@@ -382,17 +349,14 @@ mp_obj_t mod_uhashlib_crc16(mp_obj_t data) {
     uint16_t crc = crc16_hash(bufinfo.buf, bufinfo.len, &crc_opts);
     write_be_uint16(out, crc);
 
-    return mp_obj_new_str_from_vstr(&mp_type_bytes, &vstr);
+    return mp_obj_new_bytearray(2, out);
 }
 MP_DEFINE_CONST_FUN_OBJ_1(mod_uhashlib_crc16_obj, mod_uhashlib_crc16);
 
 mp_obj_t mod_uhashlib_crc32(mp_obj_t data) {
+    uint8_t out[4];
     mp_buffer_info_t bufinfo;
     mp_get_buffer_raise(data, &bufinfo, MP_BUFFER_READ);
-
-    vstr_t vstr;
-    vstr_init_len(&vstr, 4);
-    byte *out = (byte*)vstr.buf;
 
     custom_crc_t crc_opts = {
         .init = CRC_32_INIT_VALUE,
@@ -405,17 +369,14 @@ mp_obj_t mod_uhashlib_crc32(mp_obj_t data) {
     uint32_t crc = crc32_hash(bufinfo.buf, bufinfo.len, &crc_opts);
     write_be_uint32(out, crc);
 
-    return mp_obj_new_str_from_vstr(&mp_type_bytes, &vstr);
+    return mp_obj_new_bytearray(sizeof(out), out);
 }
 MP_DEFINE_CONST_FUN_OBJ_1(mod_uhashlib_crc32_obj, mod_uhashlib_crc32);
 
 mp_obj_t mod_uhashlib_crc32big(mp_obj_t data) {
+    uint8_t out[4];
     mp_buffer_info_t bufinfo;
     mp_get_buffer_raise(data, &bufinfo, MP_BUFFER_READ);
-
-    vstr_t vstr;
-    vstr_init_len(&vstr, 4);
-    byte *out = (byte*)vstr.buf;
 
     custom_crc_t crc_opts = {
         .init = CRC_32_INIT_VALUE,
@@ -428,17 +389,14 @@ mp_obj_t mod_uhashlib_crc32big(mp_obj_t data) {
     uint32_t crc = crc32_hash(bufinfo.buf, bufinfo.len, &crc_opts);
     write_be_uint32(out, crc);
 
-    return mp_obj_new_str_from_vstr(&mp_type_bytes, &vstr);
+    return mp_obj_new_bytearray(sizeof(out), out);
 }
 MP_DEFINE_CONST_FUN_OBJ_1(mod_uhashlib_crc32big_obj, mod_uhashlib_crc32big);
 
 mp_obj_t mod_uhashlib_crc64_ecma(mp_obj_t data) {
+    uint8_t out[8];
     mp_buffer_info_t bufinfo;
     mp_get_buffer_raise(data, &bufinfo, MP_BUFFER_READ);
-
-    vstr_t vstr;
-    vstr_init_len(&vstr, 8);
-    byte *out = (byte*)vstr.buf;
 
     custom_crc_t crc_opts = {
         .init = CRC_64_ECMA182_INIT_VALUE,
@@ -451,17 +409,14 @@ mp_obj_t mod_uhashlib_crc64_ecma(mp_obj_t data) {
     uint64_t crc = crc64_hash(bufinfo.buf, bufinfo.len, &crc_opts);
     write_be_uint64(out, crc);
 
-    return mp_obj_new_str_from_vstr(&mp_type_bytes, &vstr);
+    return mp_obj_new_bytearray(sizeof(out), out);
 }
 MP_DEFINE_CONST_FUN_OBJ_1(mod_uhashlib_crc64_ecma_obj, mod_uhashlib_crc64_ecma);
 
 mp_obj_t mod_uhashlib_crc64_iso(mp_obj_t data) {
+    uint8_t out[8];
     mp_buffer_info_t bufinfo;
     mp_get_buffer_raise(data, &bufinfo, MP_BUFFER_READ);
-
-    vstr_t vstr;
-    vstr_init_len(&vstr, 8);
-    byte *out = (byte*)vstr.buf;
 
     custom_crc_t crc_opts = {
         .init = CRC_64_ISO_INIT_VALUE,
@@ -474,32 +429,26 @@ mp_obj_t mod_uhashlib_crc64_iso(mp_obj_t data) {
     uint64_t crc = crc64_hash(bufinfo.buf, bufinfo.len, &crc_opts);
     write_be_uint64(out, crc);
 
-    return mp_obj_new_str_from_vstr(&mp_type_bytes, &vstr);
+    return mp_obj_new_bytearray(sizeof(out), out);
 }
 MP_DEFINE_CONST_FUN_OBJ_1(mod_uhashlib_crc64_iso_obj, mod_uhashlib_crc64_iso);
 
 mp_obj_t mod_uhashlib_djb2(mp_obj_t data) {
+    uint8_t out[4];
     mp_buffer_info_t bufinfo;
     mp_get_buffer_raise(data, &bufinfo, MP_BUFFER_READ);
-
-    vstr_t vstr;
-    vstr_init_len(&vstr, 4);
-    byte *out = (byte*)vstr.buf;
 
     uint32_t crc = djb2_hash(bufinfo.buf, bufinfo.len);
     write_be_uint32(out, crc);
 
-    return mp_obj_new_str_from_vstr(&mp_type_bytes, &vstr);
+    return mp_obj_new_bytearray(sizeof(out), out);
 }
 MP_DEFINE_CONST_FUN_OBJ_1(mod_uhashlib_djb2_obj, mod_uhashlib_djb2);
 
 mp_obj_t mod_uhashlib_fnv1(size_t n_args, const mp_obj_t *args) {
+    uint8_t out[4];
     mp_buffer_info_t bufinfo;
     mp_get_buffer_raise(args[0], &bufinfo, MP_BUFFER_READ);
-
-    vstr_t vstr;
-    vstr_init_len(&vstr, 4);
-    byte *out = (byte*)vstr.buf;
 
     uint32_t init_val = FNV1_INIT_VALUE;
     if (n_args > 1) {
@@ -510,47 +459,38 @@ mp_obj_t mod_uhashlib_fnv1(size_t n_args, const mp_obj_t *args) {
     uint32_t crc = fnv1_hash(bufinfo.buf, bufinfo.len, init_val);
     write_be_uint32(out, crc);
 
-    return mp_obj_new_str_from_vstr(&mp_type_bytes, &vstr);
+    return mp_obj_new_bytearray(sizeof(out), out);
 }
 MP_DEFINE_CONST_FUN_OBJ_VAR_BETWEEN(mod_uhashlib_fnv1_obj, 1, 2, mod_uhashlib_fnv1);
 
 mp_obj_t mod_uhashlib_force_crc32(mp_obj_t data, mp_obj_t offset, mp_obj_t newcrc) {
+    uint8_t out[4];
     mp_buffer_info_t bufinfo;
     mp_get_buffer_raise(data, &bufinfo, MP_BUFFER_READ);
-
-    vstr_t vstr;
-    vstr_init_len(&vstr, 4);
-    byte *out = (byte*)vstr.buf;
 
     uint32_t crc = force_crc32(bufinfo.buf, bufinfo.len, mp_obj_int_get_truncated(offset), mp_obj_int_get_truncated(newcrc));
     write_be_uint32(out, crc);
 
-    return mp_obj_new_str_from_vstr(&mp_type_bytes, &vstr);
+    return mp_obj_new_bytearray(sizeof(out), out);
 }
 MP_DEFINE_CONST_FUN_OBJ_3(mod_uhashlib_force_crc32_obj, mod_uhashlib_force_crc32);
 
 mp_obj_t mod_uhashlib_hmac_sha1(mp_obj_t key, mp_obj_t data) {
+    uint8_t out[20];
     mp_buffer_info_t keyinfo, bufinfo;
     mp_get_buffer_raise(key, &keyinfo, MP_BUFFER_READ);
     mp_get_buffer_raise(data, &bufinfo, MP_BUFFER_READ);
 
-    vstr_t vstr;
-    vstr_init_len(&vstr, 20);
-    byte *out = (byte*)vstr.buf;
-
     sha1_hmac(keyinfo.buf, keyinfo.len, bufinfo.buf, bufinfo.len, out);
 
-    return mp_obj_new_str_from_vstr(&mp_type_bytes, &vstr);
+    return mp_obj_new_bytearray(sizeof(out), out);
 }
 MP_DEFINE_CONST_FUN_OBJ_2(mod_uhashlib_hmac_sha1_obj, mod_uhashlib_hmac_sha1);
 
 mp_obj_t mod_uhashlib_jenkins_oaat(size_t n_args, const mp_obj_t *args) {
+    uint8_t out[4];
     mp_buffer_info_t bufinfo;
     mp_get_buffer_raise(args[0], &bufinfo, MP_BUFFER_READ);
-
-    vstr_t vstr;
-    vstr_init_len(&vstr, 4);
-    byte *out = (byte*)vstr.buf;
 
     uint32_t init_val = 0;
     if (n_args > 1) {
@@ -561,17 +501,14 @@ mp_obj_t mod_uhashlib_jenkins_oaat(size_t n_args, const mp_obj_t *args) {
     uint32_t crc = jenkins_oaat_hash(bufinfo.buf, bufinfo.len, init_val);
     write_be_uint32(out, crc);
 
-    return mp_obj_new_str_from_vstr(&mp_type_bytes, &vstr);
+    return mp_obj_new_bytearray(sizeof(out), out);
 }
 MP_DEFINE_CONST_FUN_OBJ_VAR_BETWEEN(mod_uhashlib_jenkins_oaat_obj, 1, 2, mod_uhashlib_jenkins_oaat);
 
 mp_obj_t mod_uhashlib_jhash(size_t n_args, const mp_obj_t *args) {
+    uint8_t out[4];
     mp_buffer_info_t bufinfo;
     mp_get_buffer_raise(args[0], &bufinfo, MP_BUFFER_READ);
-
-    vstr_t vstr;
-    vstr_init_len(&vstr, 4);
-    byte *out = (byte*)vstr.buf;
 
     uint32_t init_val = 0;
     if (n_args > 1) {
@@ -582,82 +519,69 @@ mp_obj_t mod_uhashlib_jhash(size_t n_args, const mp_obj_t *args) {
     uint32_t crc = jhash(bufinfo.buf, bufinfo.len, init_val);
     write_be_uint32(out, crc);
 
-    return mp_obj_new_str_from_vstr(&mp_type_bytes, &vstr);
+    return mp_obj_new_bytearray(sizeof(out), out);
 }
 MP_DEFINE_CONST_FUN_OBJ_VAR_BETWEEN(mod_uhashlib_jhash_obj, 1, 2, mod_uhashlib_jhash);
 
 mp_obj_t mod_uhashlib_lookup3_little2(mp_obj_t data, mp_obj_t pc_iv1, mp_obj_t pb_iv2) {
+    uint8_t out[4];
+    mp_obj_t items[2];
     mp_buffer_info_t bufinfo;
     mp_get_buffer_raise(data, &bufinfo, MP_BUFFER_READ);
 
-    vstr_t vstr;
-    vstr_init_len(&vstr, 8);
-    byte *out = (byte*)vstr.buf;
-
-    uint64_t hash;
     uint32_t iv1 = mp_obj_int_get_truncated(pc_iv1);
     uint32_t iv2 = mp_obj_int_get_truncated(pb_iv2);
-
     lookup3_hashlittle2(bufinfo.buf, bufinfo.len, &iv1, &iv2);
-    hash = iv2 + (((uint64_t) iv1) << 32);
-    write_be_uint64(out, hash);
 
-    return mp_obj_new_str_from_vstr(&mp_type_bytes, &vstr);
+    write_be_uint32(out, iv1);
+    items[0] = mp_obj_new_bytearray(sizeof(out), out);
+    write_be_uint32(out, iv2);
+    items[1] = mp_obj_new_bytearray(sizeof(out), out);
+
+    return mp_obj_new_tuple(2, items);
 }
 MP_DEFINE_CONST_FUN_OBJ_3(mod_uhashlib_lookup3_little2_obj, mod_uhashlib_lookup3_little2);
 
 mp_obj_t mod_uhashlib_ripemd160(mp_obj_t data) {
+    uint8_t out[20];
     mp_buffer_info_t bufinfo;
     mp_get_buffer_raise(data, &bufinfo, MP_BUFFER_READ);
 
-    vstr_t vstr;
-    vstr_init_len(&vstr, 20);
-    byte *out = (byte*)vstr.buf;
-
     ripemd160(bufinfo.buf, bufinfo.len, out);
 
-    return mp_obj_new_str_from_vstr(&mp_type_bytes, &vstr);
+    return mp_obj_new_bytearray(sizeof(out), out);
 }
 MP_DEFINE_CONST_FUN_OBJ_1(mod_uhashlib_ripemd160_obj, mod_uhashlib_ripemd160);
 
 mp_obj_t mod_uhashlib_md5(mp_obj_t data) {
+    uint8_t out[16];
     mp_buffer_info_t bufinfo;
     mp_get_buffer_raise(data, &bufinfo, MP_BUFFER_READ);
 
-    vstr_t vstr;
-    vstr_init_len(&vstr, 16);
-    byte *out = (byte*)vstr.buf;
-
     md5(bufinfo.buf, bufinfo.len, out);
 
-    return mp_obj_new_str_from_vstr(&mp_type_bytes, &vstr);
+    return mp_obj_new_bytearray(sizeof(out), out);
 }
 MP_DEFINE_CONST_FUN_OBJ_1(mod_uhashlib_md5_obj, mod_uhashlib_md5);
 
 mp_obj_t mod_uhashlib_md5_xor(mp_obj_t data) {
+    uint8_t out[4];
     mp_buffer_info_t bufinfo;
     mp_get_buffer_raise(data, &bufinfo, MP_BUFFER_READ);
-
-    vstr_t vstr;
-    vstr_init_len(&vstr, 4);
-    byte *out = (byte*)vstr.buf;
 
     uint32_t hash[4];
     md5(bufinfo.buf, bufinfo.len, (uint8_t*) hash);
     hash[0] ^= (hash[1] ^ hash[2] ^ hash[3]);
     write_be_uint32(out, hash[0]);
 
-    return mp_obj_new_str_from_vstr(&mp_type_bytes, &vstr);
+    return mp_obj_new_bytearray(sizeof(out), out);
 }
 MP_DEFINE_CONST_FUN_OBJ_1(mod_uhashlib_md5_xor_obj, mod_uhashlib_md5_xor);
 
 mp_obj_t mod_uhashlib_murmur3_32(size_t n_args, const mp_obj_t *args) {
+    uint8_t out[4];
     mp_buffer_info_t bufinfo;
     mp_get_buffer_raise(args[0], &bufinfo, MP_BUFFER_READ);
-
-    vstr_t vstr;
-    vstr_init_len(&vstr, 4);
-    byte *out = (byte*)vstr.buf;
 
     uint32_t init_val = 0;
     if (n_args > 1) {
@@ -668,17 +592,14 @@ mp_obj_t mod_uhashlib_murmur3_32(size_t n_args, const mp_obj_t *args) {
     uint32_t crc = murmur3_32(bufinfo.buf, bufinfo.len, init_val);
     write_be_uint32(out, crc);
 
-    return mp_obj_new_str_from_vstr(&mp_type_bytes, &vstr);
+    return mp_obj_new_bytearray(sizeof(out), out);
 }
 MP_DEFINE_CONST_FUN_OBJ_VAR_BETWEEN(mod_uhashlib_murmur3_32_obj, 1, 2, mod_uhashlib_murmur3_32);
 
 mp_obj_t mod_uhashlib_sdbm(size_t n_args, const mp_obj_t *args) {
+    uint8_t out[4];
     mp_buffer_info_t bufinfo;
     mp_get_buffer_raise(args[0], &bufinfo, MP_BUFFER_READ);
-
-    vstr_t vstr;
-    vstr_init_len(&vstr, 4);
-    byte *out = (byte*)vstr.buf;
 
     uint32_t init_val = 0;
     if (n_args > 1) {
@@ -689,245 +610,206 @@ mp_obj_t mod_uhashlib_sdbm(size_t n_args, const mp_obj_t *args) {
     uint32_t crc = sdbm_hash(bufinfo.buf, bufinfo.len, init_val);
     write_be_uint32(out, crc);
 
-    return mp_obj_new_str_from_vstr(&mp_type_bytes, &vstr);
+    return mp_obj_new_bytearray(sizeof(out), out);
 }
 MP_DEFINE_CONST_FUN_OBJ_VAR_BETWEEN(mod_uhashlib_sdbm_obj, 1, 2, mod_uhashlib_sdbm);
 
 mp_obj_t mod_uhashlib_sha1(mp_obj_t data) {
+    uint8_t out[20];
     mp_buffer_info_t bufinfo;
     mp_get_buffer_raise(data, &bufinfo, MP_BUFFER_READ);
 
-    vstr_t vstr;
-    vstr_init_len(&vstr, 20);
-    byte *out = (byte*)vstr.buf;
-
     sha1(bufinfo.buf, bufinfo.len, out);
 
-    return mp_obj_new_str_from_vstr(&mp_type_bytes, &vstr);
+    return mp_obj_new_bytearray(sizeof(out), out);
 }
 MP_DEFINE_CONST_FUN_OBJ_1(mod_uhashlib_sha1_obj, mod_uhashlib_sha1);
 
 mp_obj_t mod_uhashlib_sha256(mp_obj_t data) {
+    uint8_t out[32];
     mp_buffer_info_t bufinfo;
     mp_get_buffer_raise(data, &bufinfo, MP_BUFFER_READ);
 
-    vstr_t vstr;
-    vstr_init_len(&vstr, 32);
-    byte *out = (byte*)vstr.buf;
-
     sha256(bufinfo.buf, bufinfo.len, out, 0);
 
-    return mp_obj_new_str_from_vstr(&mp_type_bytes, &vstr);
+    return mp_obj_new_bytearray(sizeof(out), out);
 }
 MP_DEFINE_CONST_FUN_OBJ_1(mod_uhashlib_sha256_obj, mod_uhashlib_sha256);
 
 mp_obj_t mod_uhashlib_sha384(mp_obj_t data) {
+    uint8_t out[64];
     mp_buffer_info_t bufinfo;
     mp_get_buffer_raise(data, &bufinfo, MP_BUFFER_READ);
 
-    vstr_t vstr;
-    vstr_init_len(&vstr, 64);
-    byte *out = (byte*)vstr.buf;
-
     sha512(bufinfo.buf, bufinfo.len, out, 1);
 
-    return mp_obj_new_str_from_vstr(&mp_type_bytes, &vstr);
+    return mp_obj_new_bytearray(sizeof(out), out);
 }
 MP_DEFINE_CONST_FUN_OBJ_1(mod_uhashlib_sha384_obj, mod_uhashlib_sha384);
 
 mp_obj_t mod_uhashlib_sha512(mp_obj_t data) {
+    uint8_t out[64];
     mp_buffer_info_t bufinfo;
     mp_get_buffer_raise(data, &bufinfo, MP_BUFFER_READ);
 
-    vstr_t vstr;
-    vstr_init_len(&vstr, 64);
-    byte *out = (byte*)vstr.buf;
-
     sha512(bufinfo.buf, bufinfo.len, out, 0);
 
-    return mp_obj_new_str_from_vstr(&mp_type_bytes, &vstr);
+    return mp_obj_new_bytearray(sizeof(out), out);
 }
 MP_DEFINE_CONST_FUN_OBJ_1(mod_uhashlib_sha512_obj, mod_uhashlib_sha512);
 
 mp_obj_t mod_uhashlib_sha1_xor64(mp_obj_t data) {
+    uint8_t out[8];
     mp_buffer_info_t bufinfo;
     mp_get_buffer_raise(data, &bufinfo, MP_BUFFER_READ);
-
-    vstr_t vstr;
-    vstr_init_len(&vstr, 8);
-    byte *out = (byte*)vstr.buf;
 
     uint64_t sha[3] = {0, 0, 0};
     sha1(bufinfo.buf, bufinfo.len, (uint8_t*) sha);
     sha[0] ^= (sha[1] ^ sha[2]);
     write_le_uint64(out, sha[0]);
 
-    return mp_obj_new_str_from_vstr(&mp_type_bytes, &vstr);
+    return mp_obj_new_bytearray(sizeof(out), out);
 }
 MP_DEFINE_CONST_FUN_OBJ_1(mod_uhashlib_sha1_xor64_obj, mod_uhashlib_sha1_xor64);
 
 mp_obj_t mod_uhashlib_eachecksum(mp_obj_t data) {
+    uint8_t out[4];
     mp_buffer_info_t bufinfo;
     mp_get_buffer_raise(data, &bufinfo, MP_BUFFER_READ);
-
-    vstr_t vstr;
-    vstr_init_len(&vstr, 4);
-    byte *out = (byte*)vstr.buf;
 
     uint32_t crc = MC02_hash(bufinfo.buf, bufinfo.len);
     write_be_uint32(out, crc);
 
-    return mp_obj_new_str_from_vstr(&mp_type_bytes, &vstr);
+    return mp_obj_new_bytearray(sizeof(out), out);
 }
 MP_DEFINE_CONST_FUN_OBJ_1(mod_uhashlib_eachecksum_obj, mod_uhashlib_eachecksum);
 
 mp_obj_t mod_uhashlib_ffx_checksum(mp_obj_t data) {
+    uint8_t out[4];
     mp_buffer_info_t bufinfo;
     mp_get_buffer_raise(data, &bufinfo, MP_BUFFER_READ);
-
-    vstr_t vstr;
-    vstr_init_len(&vstr, 4);
-    byte *out = (byte*)vstr.buf;
 
     uint32_t crc = ffx_hash(bufinfo.buf, bufinfo.len);
     write_be_uint32(out, crc);
 
-    return mp_obj_new_str_from_vstr(&mp_type_bytes, &vstr);
+    return mp_obj_new_bytearray(sizeof(out), out);
 }
 MP_DEFINE_CONST_FUN_OBJ_1(mod_uhashlib_ffx_checksum_obj, mod_uhashlib_ffx_checksum);
 
 mp_obj_t mod_uhashlib_ff13_checksum(mp_obj_t data) {
+    uint8_t out[4];
     mp_buffer_info_t bufinfo;
     mp_get_buffer_raise(data, &bufinfo, MP_BUFFER_READ);
-
-    vstr_t vstr;
-    vstr_init_len(&vstr, 4);
-    byte *out = (byte*)vstr.buf;
 
     uint32_t crc = ff13_checksum(bufinfo.buf, bufinfo.len);
     write_be_uint32(out, crc);
 
-    return mp_obj_new_str_from_vstr(&mp_type_bytes, &vstr);
+    return mp_obj_new_bytearray(sizeof(out), out);
 }
 MP_DEFINE_CONST_FUN_OBJ_1(mod_uhashlib_ff13_checksum_obj, mod_uhashlib_ff13_checksum);
 
 mp_obj_t mod_uhashlib_kh25_checksum(mp_obj_t data) {
+    uint8_t out[4];
     mp_buffer_info_t bufinfo;
     mp_get_buffer_raise(data, &bufinfo, MP_BUFFER_READ);
-
-    vstr_t vstr;
-    vstr_init_len(&vstr, 4);
-    byte *out = (byte*)vstr.buf;
 
     uint32_t crc = kh25_hash(bufinfo.buf, bufinfo.len);
     write_be_uint32(out, crc);
 
-    return mp_obj_new_str_from_vstr(&mp_type_bytes, &vstr);
+    return mp_obj_new_bytearray(sizeof(out), out);
 }
 MP_DEFINE_CONST_FUN_OBJ_1(mod_uhashlib_kh25_checksum_obj, mod_uhashlib_kh25_checksum);
 
 mp_obj_t mod_uhashlib_khcom_checksum(mp_obj_t data) {
+    uint8_t out[4];
     mp_buffer_info_t bufinfo;
     mp_get_buffer_raise(data, &bufinfo, MP_BUFFER_READ);
-
-    vstr_t vstr;
-    vstr_init_len(&vstr, 4);
-    byte *out = (byte*)vstr.buf;
 
     uint32_t crc = kh_com_hash(bufinfo.buf, bufinfo.len);
     write_be_uint32(out, crc);
 
-    return mp_obj_new_str_from_vstr(&mp_type_bytes, &vstr);
+    return mp_obj_new_bytearray(sizeof(out), out);
 }
 MP_DEFINE_CONST_FUN_OBJ_1(mod_uhashlib_khcom_checksum_obj, mod_uhashlib_khcom_checksum);
 
 mp_obj_t mod_uhashlib_mgs2_checksum(mp_obj_t data) {
+    uint8_t out[4];
     mp_buffer_info_t bufinfo;
     mp_get_buffer_raise(data, &bufinfo, MP_BUFFER_READ);
-
-    vstr_t vstr;
-    vstr_init_len(&vstr, 4);
-    byte *out = (byte*)vstr.buf;
 
     uint32_t crc = mgs2_hash(bufinfo.buf, bufinfo.len);
     write_be_uint32(out, crc);
 
-    return mp_obj_new_str_from_vstr(&mp_type_bytes, &vstr);
+    return mp_obj_new_bytearray(sizeof(out), out);
 }
 MP_DEFINE_CONST_FUN_OBJ_1(mod_uhashlib_mgs2_checksum_obj, mod_uhashlib_mgs2_checksum);
 
 mp_obj_t mod_uhashlib_mgspw_checksum(mp_obj_t data) {
+    uint8_t out[4];
     mp_buffer_info_t bufinfo;
     mp_get_buffer_raise(data, &bufinfo, MP_BUFFER_READ);
-
-    vstr_t vstr;
-    vstr_init_len(&vstr, 4);
-    byte *out = (byte*)vstr.buf;
 
     uint32_t crc = mgspw_Checksum(bufinfo.buf, bufinfo.len);
     write_be_uint32(out, crc);
 
-    return mp_obj_new_str_from_vstr(&mp_type_bytes, &vstr);
+    return mp_obj_new_bytearray(sizeof(out), out);
 }
 MP_DEFINE_CONST_FUN_OBJ_1(mod_uhashlib_mgspw_checksum_obj, mod_uhashlib_mgspw_checksum);
 
 mp_obj_t mod_uhashlib_sw4_checksum(mp_obj_t data) {
+    uint8_t out[4];
     mp_buffer_info_t bufinfo;
     mp_get_buffer_raise(data, &bufinfo, MP_BUFFER_READ);
 
-    vstr_t vstr;
-    vstr_init_len(&vstr, 16);
-    byte *out = (byte*)vstr.buf;
+    mp_obj_t items[4];
     uint32_t hash[4];
 
     sw4_hash(bufinfo.buf, bufinfo.len, hash);
-    memcpy(out, hash, 16);
+    write_be_uint32(out, hash[0]);
+    items[0] = mp_obj_new_bytearray(sizeof(out), out);
+    write_be_uint32(out, hash[1]);
+    items[1] = mp_obj_new_bytearray(sizeof(out), out);
+    write_be_uint32(out, hash[2]);
+    items[2] = mp_obj_new_bytearray(sizeof(out), out);
+    write_be_uint32(out, hash[3]);
+    items[3] = mp_obj_new_bytearray(sizeof(out), out);
 
-    return mp_obj_new_str_from_vstr(&mp_type_bytes, &vstr);
+    return mp_obj_new_tuple(4, items);
 }
 MP_DEFINE_CONST_FUN_OBJ_1(mod_uhashlib_sw4_checksum_obj, mod_uhashlib_sw4_checksum);
 
 mp_obj_t mod_uhashlib_toz_checksum(mp_obj_t data) {
+    uint8_t out[20];
     mp_buffer_info_t bufinfo;
     mp_get_buffer_raise(data, &bufinfo, MP_BUFFER_READ);
 
-    vstr_t vstr;
-    vstr_init_len(&vstr, 20);
-    byte *out = (byte*)vstr.buf;
-
     toz_hash(bufinfo.buf, bufinfo.len, out);
 
-    return mp_obj_new_str_from_vstr(&mp_type_bytes, &vstr);
+    return mp_obj_new_bytearray(sizeof(out), out);
 }
 MP_DEFINE_CONST_FUN_OBJ_1(mod_uhashlib_toz_checksum_obj, mod_uhashlib_toz_checksum);
 
 mp_obj_t mod_uhashlib_tiara2_checksum(mp_obj_t data) {
+    uint8_t out[4];
     mp_buffer_info_t bufinfo;
     mp_get_buffer_raise(data, &bufinfo, MP_BUFFER_READ);
-
-    vstr_t vstr;
-    vstr_init_len(&vstr, 4);
-    byte *out = (byte*)vstr.buf;
 
     uint32_t crc = tiara2_hash(bufinfo.buf, bufinfo.len);
     write_be_uint32(out, crc);
 
-    return mp_obj_new_str_from_vstr(&mp_type_bytes, &vstr);
+    return mp_obj_new_bytearray(sizeof(out), out);
 }
 MP_DEFINE_CONST_FUN_OBJ_1(mod_uhashlib_tiara2_checksum_obj, mod_uhashlib_tiara2_checksum);
 
 mp_obj_t mod_uhashlib_castlevania_checksum(mp_obj_t data) {
+    uint8_t out[4];
     mp_buffer_info_t bufinfo;
     mp_get_buffer_raise(data, &bufinfo, MP_BUFFER_READ);
-
-    vstr_t vstr;
-    vstr_init_len(&vstr, 4);
-    byte *out = (byte*)vstr.buf;
 
     uint32_t crc = castlevania_hash(bufinfo.buf, bufinfo.len);
     write_be_uint32(out, crc);
 
-    return mp_obj_new_str_from_vstr(&mp_type_bytes, &vstr);
+    return mp_obj_new_bytearray(sizeof(out), out);
 }
 MP_DEFINE_CONST_FUN_OBJ_1(mod_uhashlib_castlevania_checksum_obj, mod_uhashlib_castlevania_checksum);
 
@@ -949,32 +831,26 @@ mp_obj_t mod_uhashlib_rockstar_checksum(mp_obj_t data) {
 MP_DEFINE_CONST_FUN_OBJ_1(mod_uhashlib_rockstar_checksum_obj, mod_uhashlib_rockstar_checksum);
 
 mp_obj_t mod_uhashlib_dbzxv2_checksum(mp_obj_t data) {
+    uint8_t out[8];
     mp_buffer_info_t bufinfo;
     mp_get_buffer_raise(data, &bufinfo, MP_BUFFER_READ);
-
-    vstr_t vstr;
-    vstr_init_len(&vstr, 8);
-    byte *out = (byte*)vstr.buf;
 
     uint64_t crc = dbzxv2_checksum(bufinfo.buf, bufinfo.len);
     write_be_uint64(out, crc);
 
-    return mp_obj_new_str_from_vstr(&mp_type_bytes, &vstr);
+    return mp_obj_new_bytearray(sizeof(out), out);
 }
 MP_DEFINE_CONST_FUN_OBJ_1(mod_uhashlib_dbzxv2_checksum_obj, mod_uhashlib_dbzxv2_checksum);
 
 mp_obj_t mod_uhashlib_deadrising_checksum(mp_obj_t data) {
+    uint8_t out[4];
     mp_buffer_info_t bufinfo;
     mp_get_buffer_raise(data, &bufinfo, MP_BUFFER_READ);
-
-    vstr_t vstr;
-    vstr_init_len(&vstr, 4);
-    byte *out = (byte*)vstr.buf;
 
     uint32_t crc = deadrising_checksum(bufinfo.buf, bufinfo.len);
     write_be_uint32(out, crc);
 
-    return mp_obj_new_str_from_vstr(&mp_type_bytes, &vstr);
+    return mp_obj_new_bytearray(sizeof(out), out);
 }
 MP_DEFINE_CONST_FUN_OBJ_1(mod_uhashlib_deadrising_checksum_obj, mod_uhashlib_deadrising_checksum);
 
