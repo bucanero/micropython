@@ -194,6 +194,8 @@ c_functions = (
     "deadrising_checksum",
     "ff13_checksum",
     "mgspw_Checksum",
+    "md5_xor_hash",
+    "sha1_xor64_hash",
     "ripemd160",
     "md5",
     "sha1",

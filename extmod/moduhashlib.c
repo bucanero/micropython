@@ -569,10 +569,8 @@ mp_obj_t mod_uhashlib_md5_xor(mp_obj_t data) {
     mp_buffer_info_t bufinfo;
     mp_get_buffer_raise(data, &bufinfo, MP_BUFFER_READ);
 
-    uint32_t hash[4];
-    md5(bufinfo.buf, bufinfo.len, (uint8_t*) hash);
-    hash[0] ^= (hash[1] ^ hash[2] ^ hash[3]);
-    write_be_uint32(out, hash[0]);
+    uint32_t hash = md5_xor_hash(bufinfo.buf, bufinfo.len);
+    write_be_uint32(out, hash);
 
     return mp_obj_new_bytearray(sizeof(out), out);
 }
@@ -663,10 +661,8 @@ mp_obj_t mod_uhashlib_sha1_xor64(mp_obj_t data) {
     mp_buffer_info_t bufinfo;
     mp_get_buffer_raise(data, &bufinfo, MP_BUFFER_READ);
 
-    uint64_t sha[3] = {0, 0, 0};
-    sha1(bufinfo.buf, bufinfo.len, (uint8_t*) sha);
-    sha[0] ^= (sha[1] ^ sha[2]);
-    write_le_uint64(out, sha[0]);
+    uint64_t shaxor = sha1_xor64_hash(bufinfo.buf, bufinfo.len);
+    write_be_uint64(out, shaxor);
 
     return mp_obj_new_bytearray(sizeof(out), out);
 }
@@ -685,12 +681,13 @@ mp_obj_t mod_uhashlib_eachecksum(mp_obj_t data) {
 MP_DEFINE_CONST_FUN_OBJ_1(mod_uhashlib_eachecksum_obj, mod_uhashlib_eachecksum);
 
 mp_obj_t mod_uhashlib_ffx_checksum(mp_obj_t data) {
-    uint8_t out[4];
+    uint8_t out[2];
     mp_buffer_info_t bufinfo;
     mp_get_buffer_raise(data, &bufinfo, MP_BUFFER_READ);
 
-    uint32_t crc = ffx_hash(bufinfo.buf, bufinfo.len);
-    write_be_uint32(out, crc);
+    // FFX hash is stored in little-endian
+    uint16_t crc = ffx_hash(bufinfo.buf, bufinfo.len);
+    write_le_uint16(out, crc);
 
     return mp_obj_new_bytearray(sizeof(out), out);
 }
@@ -701,8 +698,9 @@ mp_obj_t mod_uhashlib_ff13_checksum(mp_obj_t data) {
     mp_buffer_info_t bufinfo;
     mp_get_buffer_raise(data, &bufinfo, MP_BUFFER_READ);
 
+    // FFXIII hash is stored in little-endian
     uint32_t crc = ff13_checksum(bufinfo.buf, bufinfo.len);
-    write_be_uint32(out, crc);
+    write_le_uint32(out, crc);
 
     return mp_obj_new_bytearray(sizeof(out), out);
 }
@@ -713,8 +711,9 @@ mp_obj_t mod_uhashlib_kh25_checksum(mp_obj_t data) {
     mp_buffer_info_t bufinfo;
     mp_get_buffer_raise(data, &bufinfo, MP_BUFFER_READ);
 
+    // Kingdom Hearts 2.5 hash is stored in little-endian
     uint32_t crc = kh25_hash(bufinfo.buf, bufinfo.len);
-    write_be_uint32(out, crc);
+    write_le_uint32(out, crc);
 
     return mp_obj_new_bytearray(sizeof(out), out);
 }
@@ -806,8 +805,9 @@ mp_obj_t mod_uhashlib_castlevania_checksum(mp_obj_t data) {
     mp_buffer_info_t bufinfo;
     mp_get_buffer_raise(data, &bufinfo, MP_BUFFER_READ);
 
+    // Castlevania LOS hash is stored in little-endian
     uint32_t crc = castlevania_hash(bufinfo.buf, bufinfo.len);
-    write_be_uint32(out, crc);
+    write_le_uint32(out, crc);
 
     return mp_obj_new_bytearray(sizeof(out), out);
 }
