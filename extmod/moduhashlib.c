@@ -58,10 +58,10 @@ MP_DECLARE_CONST_FUN_OBJ(mod_uhashlib_crc32_obj);
 MP_DECLARE_CONST_FUN_OBJ(mod_uhashlib_crc32big_obj);
 MP_DECLARE_CONST_FUN_OBJ(mod_uhashlib_crc64_iso_obj);
 MP_DECLARE_CONST_FUN_OBJ(mod_uhashlib_crc64_ecma_obj);
-MP_DECLARE_CONST_FUN_OBJ(mod_uhashlib_ripemd160_obj);
 MP_DECLARE_CONST_FUN_OBJ(mod_uhashlib_md5_obj);
 MP_DECLARE_CONST_FUN_OBJ(mod_uhashlib_md5_xor_obj);
 MP_DECLARE_CONST_FUN_OBJ(mod_uhashlib_sha1_obj);
+MP_DECLARE_CONST_FUN_OBJ(mod_uhashlib_sha224_obj);
 MP_DECLARE_CONST_FUN_OBJ(mod_uhashlib_sha256_obj);
 MP_DECLARE_CONST_FUN_OBJ(mod_uhashlib_sha384_obj);
 MP_DECLARE_CONST_FUN_OBJ(mod_uhashlib_sha512_obj);
@@ -154,29 +154,59 @@ MP_DECLARE_CONST_FUN_OBJ(mod_uhashlib_djb2_obj);
     ret = read_be_uint64(buf);
 
 
-mp_obj_t mod_uhashlib_add(mp_obj_t data) {
+mp_obj_t mod_uhashlib_add(size_t n_args, const mp_obj_t *args) {
     uint8_t out[4];
     mp_buffer_info_t bufinfo;
-    mp_get_buffer_raise(data, &bufinfo, MP_BUFFER_READ);
+    mp_get_buffer_raise(args[0], &bufinfo, MP_BUFFER_READ);
 
     uint32_t crc = add_hash(bufinfo.buf, bufinfo.len);
     write_be_uint32(out, crc);
 
-    return mp_obj_new_bytearray(sizeof(out), out);
-}
-MP_DEFINE_CONST_FUN_OBJ_1(mod_uhashlib_add_obj, mod_uhashlib_add);
+    int carry = 0;
+    if (n_args > 1) {
+        // custom carry value
+        carry = mp_obj_int_get_truncated(args[1]);
+        if (carry != 2)
+            nlr_raise(mp_obj_new_exception_msg_varg(&mp_type_ValueError, "Invalid carry value"));
 
-mp_obj_t mod_uhashlib_wadd(mp_obj_t data) {
+        while (crc > 0xFFFF)
+        {
+            crc = (crc & 0x0000FFFF) + ((crc & 0xFFFF0000) >> 8*carry);
+        }
+
+        write_be_uint16(out, crc);
+    }
+
+    return mp_obj_new_bytearray(sizeof(out) - carry, out);
+}
+MP_DEFINE_CONST_FUN_OBJ_VAR_BETWEEN(mod_uhashlib_add_obj, 1, 2, mod_uhashlib_add);
+
+mp_obj_t mod_uhashlib_wadd(size_t n_args, const mp_obj_t *args) {
     uint8_t out[4];
     mp_buffer_info_t bufinfo;
-    mp_get_buffer_raise(data, &bufinfo, MP_BUFFER_READ);
+    mp_get_buffer_raise(args[0], &bufinfo, MP_BUFFER_READ);
 
     uint32_t crc = wadd_hash(bufinfo.buf, bufinfo.len, 0);
     write_be_uint32(out, crc);
 
-    return mp_obj_new_bytearray(sizeof(out), out);
+    int carry = 0;
+    if (n_args > 1) {
+        // custom carry value
+        carry = mp_obj_int_get_truncated(args[1]);
+        if (carry != 2)
+            nlr_raise(mp_obj_new_exception_msg_varg(&mp_type_ValueError, "Invalid carry value"));
+
+        while (crc > 0xFFFF)
+        {
+            crc = (crc & 0x0000FFFF) + ((crc & 0xFFFF0000) >> 8*carry);
+        }
+
+        write_be_uint16(out, crc);
+    }
+
+    return mp_obj_new_bytearray(sizeof(out) - carry, out);
 }
-MP_DEFINE_CONST_FUN_OBJ_1(mod_uhashlib_wadd_obj, mod_uhashlib_wadd);
+MP_DEFINE_CONST_FUN_OBJ_VAR_BETWEEN(mod_uhashlib_wadd_obj, 1, 2, mod_uhashlib_wadd);
 
 mp_obj_t mod_uhashlib_wadd_le(mp_obj_t data) {
     uint8_t out[4];
@@ -542,16 +572,16 @@ mp_obj_t mod_uhashlib_lookup3_little2(mp_obj_t data, mp_obj_t pc_iv1, mp_obj_t p
 }
 MP_DEFINE_CONST_FUN_OBJ_3(mod_uhashlib_lookup3_little2_obj, mod_uhashlib_lookup3_little2);
 
-mp_obj_t mod_uhashlib_ripemd160(mp_obj_t data) {
-    uint8_t out[20];
+mp_obj_t mod_uhashlib_sha224(mp_obj_t data) {
+    uint8_t out[28];
     mp_buffer_info_t bufinfo;
     mp_get_buffer_raise(data, &bufinfo, MP_BUFFER_READ);
 
-    ripemd160(bufinfo.buf, bufinfo.len, out);
+    sha256(bufinfo.buf, bufinfo.len, out, 1);
 
     return mp_obj_new_bytearray(sizeof(out), out);
 }
-MP_DEFINE_CONST_FUN_OBJ_1(mod_uhashlib_ripemd160_obj, mod_uhashlib_ripemd160);
+MP_DEFINE_CONST_FUN_OBJ_1(mod_uhashlib_sha224_obj, mod_uhashlib_sha224);
 
 mp_obj_t mod_uhashlib_md5(mp_obj_t data) {
     uint8_t out[16];
@@ -635,7 +665,7 @@ mp_obj_t mod_uhashlib_sha256(mp_obj_t data) {
 MP_DEFINE_CONST_FUN_OBJ_1(mod_uhashlib_sha256_obj, mod_uhashlib_sha256);
 
 mp_obj_t mod_uhashlib_sha384(mp_obj_t data) {
-    uint8_t out[64];
+    uint8_t out[48];
     mp_buffer_info_t bufinfo;
     mp_get_buffer_raise(data, &bufinfo, MP_BUFFER_READ);
 
@@ -867,7 +897,7 @@ STATIC const mp_rom_map_elem_t mp_module_hashlib_globals_table[] = {
     { MP_ROM_QSTR(MP_QSTR_crc32big), MP_ROM_PTR(&mod_uhashlib_crc32big_obj) },
     { MP_ROM_QSTR(MP_QSTR_crc64_iso), MP_ROM_PTR(&mod_uhashlib_crc64_iso_obj) },
     { MP_ROM_QSTR(MP_QSTR_crc64_ecma), MP_ROM_PTR(&mod_uhashlib_crc64_ecma_obj) },
-    { MP_ROM_QSTR(MP_QSTR_ripemd160), MP_ROM_PTR(&mod_uhashlib_ripemd160_obj) },
+    { MP_ROM_QSTR(MP_QSTR_sha224), MP_ROM_PTR(&mod_uhashlib_sha224_obj) },
     { MP_ROM_QSTR(MP_QSTR_md5), MP_ROM_PTR(&mod_uhashlib_md5_obj) },
     { MP_ROM_QSTR(MP_QSTR_md5_xor), MP_ROM_PTR(&mod_uhashlib_md5_xor_obj) },
     { MP_ROM_QSTR(MP_QSTR_sha1), MP_ROM_PTR(&mod_uhashlib_sha1_obj) },
