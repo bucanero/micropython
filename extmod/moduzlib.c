@@ -22,6 +22,8 @@
 #include "py/nlr.h"
 #include "py/runtime.h"
 
+#include "apollo.h"
+
 #if 0 // print debugging info
 #define DEBUG_printf DEBUG_printf
 #else // don't print debugging info
@@ -30,15 +32,6 @@
 
 #define CHUNK_SIZE 16384  // Initial chunk size for output buffer
 
-extern int offzip_init(int wbits);
-extern int offzip_search(FILE *fd);
-extern int offzip_verify(FILE *fd, uint32_t *offset, uint32_t *inlen, uint32_t *outlen);
-extern void offzip_free(void);
-
-#if defined(_MSC_VER) || defined(__MINGW32__) || defined(__MINGW64__)
-/* https://github.com/Arryboom/fmemopen_windows  */
-extern FILE *fmemopen(void *buf, size_t len, const char *type);
-#endif
 
 /**
  * @brief Decompress data from input buffer to dynamically allocated output buffer
@@ -233,19 +226,18 @@ STATIC mp_obj_t mod_uzlib_offzip(size_t n_args, const mp_obj_t *args) {
         wbits = mp_obj_int_get_truncated(args[1]);
     }
 
-    if (offzip_init(wbits) != Z_OK) {
+    if (offzip_init(bufinfo.len, wbits) != Z_OK) {
         nlr_raise(mp_obj_new_exception_msg_varg(&mp_type_ValueError, "offZip init error"));
     }
 
     list = mp_obj_new_list(0, NULL);
-    FILE* fd = fmemopen(bufinfo.buf, bufinfo.len, "rb");
 
-    while (offzip_search(fd) == Z_OK)
+    while (offzip_search(bufinfo.buf) == Z_OK)
     {
-        mp_obj_t items[3];
+        mp_obj_t items[4];
         uint32_t offz = 0, inlen = 0, outlen = 0;
 
-        if (offzip_verify(fd, &offz, &inlen, &outlen) != Z_OK) {
+        if (offzip_verify(bufinfo.buf, &offz, &inlen, &outlen) != Z_OK) {
             DEBUG_printf("offZip unzip error\n");
             continue;
         }
@@ -253,17 +245,59 @@ STATIC mp_obj_t mod_uzlib_offzip(size_t n_args, const mp_obj_t *args) {
         items[0] = mp_obj_new_int_from_uint(offz);
         items[1] = mp_obj_new_int_from_uint(inlen);
         items[2] = mp_obj_new_int_from_uint(outlen);
-        mp_obj_list_append(list, mp_obj_new_tuple(3, items));
+        items[3] = mp_obj_new_int(wbits);
+        mp_obj_list_append(list, mp_obj_new_tuple(4, items));
 
         DEBUG_printf("Found compressed block at offset 0x%08x: %d -> %d\n", offz, inlen, outlen);
     }
 
     offzip_free();
-    fclose (fd);
 
     return list;
 }
 STATIC MP_DEFINE_CONST_FUN_OBJ_VAR_BETWEEN(mod_uzlib_offzip_obj, 1, 2, mod_uzlib_offzip);
+
+STATIC mp_obj_t mod_uzlib_packzip(mp_obj_t data, mp_obj_t oz_tuple, mp_obj_t oz_data) {
+    mp_buffer_info_t bufinfo, ozdinfo;
+    vstr_t vzip, out;
+    mp_uint_t len;
+    mp_obj_t *items;
+
+    mp_get_buffer_raise(data, &bufinfo, MP_BUFFER_READ);
+    mp_get_buffer_raise(oz_data, &ozdinfo, MP_BUFFER_READ);
+
+    if (mp_obj_get_type(oz_tuple) != &mp_type_tuple) {
+        nlr_raise(mp_obj_new_exception_msg_varg(&mp_type_ValueError, "packZip error: tuple required"));
+    }
+
+    mp_obj_tuple_get(oz_tuple, &len, &items);
+    if (len != 4) {
+        nlr_raise(mp_obj_new_exception_msg_varg(&mp_type_ValueError, "packZip error: tuple of 4 required"));
+    }
+
+    uint32_t oz_offset = mp_obj_get_int_truncated(items[0]);
+    uint32_t oz_ziplen = mp_obj_get_int_truncated(items[1]);
+    int oz_wbits = mp_obj_get_int_truncated(items[3]);
+
+    DEBUG_printf("- offset        0x%08x\n", oz_offset);
+    DEBUG_printf("- windowbits    %d\n", oz_wbits);
+    DEBUG_printf("- zip size      0x%08x / %u\n", oz_ziplen, oz_ziplen);
+
+    vstr_init(&vzip, oz_ziplen);
+    if (!compress_buffer(ozdinfo.buf, ozdinfo.len, &vzip, oz_wbits, Z_BEST_COMPRESSION)) {
+        nlr_raise(mp_obj_new_exception_msg_varg(&mp_type_ValueError, "packZip error: compression failed"));
+    }
+
+    vstr_init_len(&out, MAX(bufinfo.len, oz_offset + vzip.len));
+    memcpy(out.buf, bufinfo.buf, bufinfo.len);
+    if (bufinfo.len > oz_offset) {
+        memset(out.buf + oz_offset, 0, MIN(bufinfo.len - oz_offset, oz_ziplen));
+    }
+    memcpy(out.buf + oz_offset, vzip.buf, vzip.len);
+
+    return mp_obj_new_str_from_vstr(&mp_type_bytes, &out);
+}
+MP_DEFINE_CONST_FUN_OBJ_3(mod_uzlib_packzip_obj, mod_uzlib_packzip);
 
 #if MICROPY_PY_UZLIB
 
@@ -272,6 +306,7 @@ STATIC const mp_rom_map_elem_t mp_module_uzlib_globals_table[] = {
     { MP_ROM_QSTR(MP_QSTR_compress), MP_ROM_PTR(&mod_uzlib_compress_obj) },
     { MP_ROM_QSTR(MP_QSTR_decompress), MP_ROM_PTR(&mod_uzlib_decompress_obj) },
     { MP_ROM_QSTR(MP_QSTR_offzip), MP_ROM_PTR(&mod_uzlib_offzip_obj) },
+    { MP_ROM_QSTR(MP_QSTR_packzip), MP_ROM_PTR(&mod_uzlib_packzip_obj) },
 };
 
 STATIC MP_DEFINE_CONST_DICT(mp_module_uzlib_globals, mp_module_uzlib_globals_table);

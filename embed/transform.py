@@ -246,7 +246,6 @@ c_functions = (
     "offzip_free",
     "offzip_verify",
     "offzip_search",
-    "fmemopen",
 )
 
 def x1_vm(m):
