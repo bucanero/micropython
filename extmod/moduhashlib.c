@@ -143,15 +143,16 @@ MP_DECLARE_CONST_FUN_OBJ(mod_uhashlib_djb2_obj);
  * read_be_uint64: read an unsigned 64 bits Big Endian
  * value from a buffer
  */
-#define read_be_uint64(buf) \
-    ((uint64_t)(buf[7]) | ((uint64_t)(buf[6]) << 8) | \
-    ((uint64_t)(buf[5]) << 16) | ((uint64_t)(buf[4]) << 24) | \
-    ((uint64_t)(buf[3]) << 32) | ((uint64_t)(buf[2]) << 40) | \
-    ((uint64_t)(buf[1]) << 48) | ((uint64_t)(buf[0]) << 56))
+#define read_le_uint64(buf) \
+    ((uint64_t)(buf[0]) | ((uint64_t)(buf[1]) << 8) | \
+    ((uint64_t)(buf[2]) << 16) | ((uint64_t)(buf[3]) << 24) | \
+    ((uint64_t)(buf[4]) << 32) | ((uint64_t)(buf[5]) << 40) | \
+    ((uint64_t)(buf[6]) << 48) | ((uint64_t)(buf[7]) << 56))
 
 #define parse_uint64_from_obj(obj, buf, ret) \
-    mp_set_unaligned(UINT64, buf, true, obj); \
-    ret = read_be_uint64(buf);
+    memset(buf, 0, sizeof(buf)); \
+    mp_set_unaligned(UINT64, buf, false, obj); \
+    ret = read_le_uint64(buf);
 
 
 mp_obj_t mod_uhashlib_add(size_t n_args, const mp_obj_t *args) {
@@ -573,13 +574,13 @@ mp_obj_t mod_uhashlib_lookup3_little2(mp_obj_t data, mp_obj_t pc_iv1, mp_obj_t p
 MP_DEFINE_CONST_FUN_OBJ_3(mod_uhashlib_lookup3_little2_obj, mod_uhashlib_lookup3_little2);
 
 mp_obj_t mod_uhashlib_sha224(mp_obj_t data) {
-    uint8_t out[28];
+    uint8_t out[32];
     mp_buffer_info_t bufinfo;
     mp_get_buffer_raise(data, &bufinfo, MP_BUFFER_READ);
 
     sha256(bufinfo.buf, bufinfo.len, out, 1);
 
-    return mp_obj_new_bytearray(sizeof(out), out);
+    return mp_obj_new_bytearray(28, out);
 }
 MP_DEFINE_CONST_FUN_OBJ_1(mod_uhashlib_sha224_obj, mod_uhashlib_sha224);
 
@@ -665,13 +666,13 @@ mp_obj_t mod_uhashlib_sha256(mp_obj_t data) {
 MP_DEFINE_CONST_FUN_OBJ_1(mod_uhashlib_sha256_obj, mod_uhashlib_sha256);
 
 mp_obj_t mod_uhashlib_sha384(mp_obj_t data) {
-    uint8_t out[48];
+    uint8_t out[64];
     mp_buffer_info_t bufinfo;
     mp_get_buffer_raise(data, &bufinfo, MP_BUFFER_READ);
 
     sha512(bufinfo.buf, bufinfo.len, out, 1);
 
-    return mp_obj_new_bytearray(sizeof(out), out);
+    return mp_obj_new_bytearray(48, out);
 }
 MP_DEFINE_CONST_FUN_OBJ_1(mod_uhashlib_sha384_obj, mod_uhashlib_sha384);
 
