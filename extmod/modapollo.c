@@ -30,6 +30,7 @@
 MP_DECLARE_CONST_FUN_OBJ(mod_apollo_search_obj);
 MP_DECLARE_CONST_FUN_OBJ(mod_apollo_endian_swap_obj);
 MP_DECLARE_CONST_FUN_OBJ(mod_apollo_reverse_search_obj);
+MP_DECLARE_CONST_FUN_OBJ(mod_apollo_apply_savewizard_obj);
 
 STATIC const MP_DEFINE_STR_OBJ(mod_apollo_version_obj, APOLLO_LIB_VERSION);
 
@@ -119,6 +120,19 @@ mp_obj_t mod_apollo_reverse_search(size_t n_args, const mp_obj_t *args) {
 }
 MP_DEFINE_CONST_FUN_OBJ_VAR_BETWEEN(mod_apollo_reverse_search_obj, 2, 3, mod_apollo_reverse_search);
 
+mp_obj_t mod_apollo_apply_savewizard(mp_obj_t data, mp_obj_t code) {
+    mp_buffer_info_t bufinfo;
+    mp_get_buffer_raise(data, &bufinfo, MP_BUFFER_READ);
+
+    code_entry_t code_entry = {
+        .codes = (char*)mp_obj_str_get_str(code),
+    };
+
+    size_t ret = apply_sw_patch_code (bufinfo.buf, bufinfo.len, &code_entry);
+
+    return mp_obj_new_int_from_uint(ret);
+}
+MP_DEFINE_CONST_FUN_OBJ_2(mod_apollo_apply_savewizard_obj, mod_apollo_apply_savewizard);
 
 #if MICROPY_PY_APOLLO
 
@@ -128,6 +142,7 @@ STATIC const mp_rom_map_elem_t mp_module_apollo_globals_table[] = {
     { MP_ROM_QSTR(MP_QSTR_search), MP_ROM_PTR(&mod_apollo_search_obj) },
     { MP_ROM_QSTR(MP_QSTR_endian_swap), MP_ROM_PTR(&mod_apollo_endian_swap_obj) },
     { MP_ROM_QSTR(MP_QSTR_reverse_search), MP_ROM_PTR(&mod_apollo_reverse_search_obj) },
+    { MP_ROM_QSTR(MP_QSTR_apply_savewizard), MP_ROM_PTR(&mod_apollo_apply_savewizard_obj) },
 };
 
 STATIC MP_DEFINE_CONST_DICT(mp_module_apollo_globals, mp_module_apollo_globals_table);
