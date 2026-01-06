@@ -845,19 +845,35 @@ mp_obj_t mod_uhashlib_castlevania_checksum(mp_obj_t data) {
 MP_DEFINE_CONST_FUN_OBJ_1(mod_uhashlib_castlevania_checksum_obj, mod_uhashlib_castlevania_checksum);
 
 mp_obj_t mod_uhashlib_rockstar_checksum(mp_obj_t data) {
+    uint8_t out[4];
     mp_buffer_info_t bufinfo;
     mp_get_buffer_raise(data, &bufinfo, MP_BUFFER_READ);
 
-    nlr_raise(mp_obj_new_exception_msg_varg(&mp_type_ValueError, "NOT IMPLEMENTED"));
+    uint32_t chks = 0, chks_len = 0;
+    uint8_t* chks_off = NULL;
+    const uint8_t* start = bufinfo.buf;
 
-    vstr_t vstr;
-    vstr_init_len(&vstr, 4);
-    byte *out = (byte*)vstr.buf;
+    // Updates all CHKS values
+    chks_off = (uint8_t*) mp_find_subbytes(start, bufinfo.len - (start - (uint8_t*)bufinfo.buf), (uint8_t*)"CHKS", 5, 1);
+    while (chks_off)
+    {
+        chks = read_be_uint32 ((&chks_off[4]));
+        chks_len = read_be_uint32 ((&chks_off[8]));
 
-    uint32_t crc = add_hash(bufinfo.buf, bufinfo.len);
-    write_be_uint32(out, crc);
+        memset(chks_off + 8, 0, 8);
+        chks = jenkins_oaat_hash((uint8_t*) (chks_off - chks_len + chks), chks_len, 0x3FAC7125);
+        DEBUG_printf(" + CHKS Size: 0x%X Offset: %p - Wrote Checksum: %08X\n", chks_len, chks_off, chks);
 
-    return mp_obj_new_str_from_vstr(&mp_type_bytes, &vstr);
+        write_be_uint32((&chks_off[0xC]), chks);
+        write_be_uint32((&chks_off[0x8]), chks_len);
+
+        start = chks_off + 1;
+        chks_off = (uint8_t*) mp_find_subbytes(start, bufinfo.len - (start - (uint8_t*)bufinfo.buf), (uint8_t*)"CHKS", 5, 1);
+    }
+
+    write_be_uint32(out, chks);
+
+    return mp_obj_new_bytearray(sizeof(out), out);
 }
 MP_DEFINE_CONST_FUN_OBJ_1(mod_uhashlib_rockstar_checksum_obj, mod_uhashlib_rockstar_checksum);
 

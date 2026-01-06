@@ -54,7 +54,7 @@ MP_DECLARE_CONST_FUN_OBJ(mod_ucrypto_camellia_ecb_obj);
 
 mp_obj_t mod_ucrypto_dw8xl(mp_obj_t data) {
     mp_buffer_info_t bufinfo;
-    mp_get_buffer_raise(data, &bufinfo, MP_BUFFER_RW);
+    mp_get_buffer_raise(data, &bufinfo, MP_BUFFER_READ);
 
     dw8xl_encode_data(bufinfo.buf, bufinfo.len);
 
@@ -64,7 +64,7 @@ MP_DEFINE_CONST_FUN_OBJ_1(mod_ucrypto_dw8xl_obj, mod_ucrypto_dw8xl);
 
 mp_obj_t mod_ucrypto_diablo3(mp_obj_t enc_mode, mp_obj_t data) {
     mp_buffer_info_t bufinfo;
-    mp_get_buffer_raise(data, &bufinfo, MP_BUFFER_RW);
+    mp_get_buffer_raise(data, &bufinfo, MP_BUFFER_READ);
 
     if (mp_obj_int_get_truncated(enc_mode))
         // encryption mode
@@ -79,7 +79,7 @@ MP_DEFINE_CONST_FUN_OBJ_2(mod_ucrypto_diablo3_obj, mod_ucrypto_diablo3);
 
 mp_obj_t mod_ucrypto_silent_hill3(mp_obj_t enc_mode, mp_obj_t data) {
     mp_buffer_info_t bufinfo;
-    mp_get_buffer_raise(data, &bufinfo, MP_BUFFER_RW);
+    mp_get_buffer_raise(data, &bufinfo, MP_BUFFER_READ);
 
     if (mp_obj_int_get_truncated(enc_mode))
         // encryption mode
@@ -94,7 +94,7 @@ MP_DEFINE_CONST_FUN_OBJ_2(mod_ucrypto_silent_hill3_obj, mod_ucrypto_silent_hill3
 
 mp_obj_t mod_ucrypto_nfs_undercover(mp_obj_t enc_mode, mp_obj_t data) {
     mp_buffer_info_t bufinfo;
-    mp_get_buffer_raise(data, &bufinfo, MP_BUFFER_RW);
+    mp_get_buffer_raise(data, &bufinfo, MP_BUFFER_READ);
 
     if (mp_obj_int_get_truncated(enc_mode))
         // encryption mode
@@ -109,7 +109,7 @@ MP_DEFINE_CONST_FUN_OBJ_2(mod_ucrypto_nfs_undercover_obj, mod_ucrypto_nfs_underc
 
 mp_obj_t mod_ucrypto_final_fantasy13(size_t n_args, const mp_obj_t *args) {
     mp_buffer_info_t bufinfo, keyinfo;
-    mp_get_buffer_raise(args[1], &bufinfo, MP_BUFFER_RW);
+    mp_get_buffer_raise(args[1], &bufinfo, MP_BUFFER_READ);
     mp_get_buffer_raise(args[2], &keyinfo, MP_BUFFER_READ);
 
     if (mp_obj_int_get_truncated(args[0]))
@@ -125,7 +125,7 @@ MP_DEFINE_CONST_FUN_OBJ_VAR_BETWEEN(mod_ucrypto_final_fantasy13_obj, 4, 4, mod_u
 
 mp_obj_t mod_ucrypto_borderlands3(mp_obj_t enc_mode, mp_obj_t data, mp_obj_t type) {
     mp_buffer_info_t bufinfo;
-    mp_get_buffer_raise(data, &bufinfo, MP_BUFFER_RW);
+    mp_get_buffer_raise(data, &bufinfo, MP_BUFFER_READ);
 
     if (mp_obj_int_get_truncated(enc_mode))
         // encryption mode
@@ -140,7 +140,7 @@ MP_DEFINE_CONST_FUN_OBJ_3(mod_ucrypto_borderlands3_obj, mod_ucrypto_borderlands3
 
 mp_obj_t mod_ucrypto_mgs_pw(mp_obj_t enc_mode, mp_obj_t data) {
     mp_buffer_info_t bufinfo;
-    mp_get_buffer_raise(data, &bufinfo, MP_BUFFER_RW);
+    mp_get_buffer_raise(data, &bufinfo, MP_BUFFER_READ);
 
     if (mp_obj_int_get_truncated(enc_mode))
         // encryption mode
@@ -155,7 +155,7 @@ MP_DEFINE_CONST_FUN_OBJ_2(mod_ucrypto_mgs_pw_obj, mod_ucrypto_mgs_pw);
 
 mp_obj_t mod_ucrypto_mgs_base64(mp_obj_t enc_mode, mp_obj_t data) {
     mp_buffer_info_t bufinfo;
-    mp_get_buffer_raise(data, &bufinfo, MP_BUFFER_RW);
+    mp_get_buffer_raise(data, &bufinfo, MP_BUFFER_READ);
 
     if (mp_obj_int_get_truncated(enc_mode))
         // encryption mode
@@ -170,7 +170,7 @@ MP_DEFINE_CONST_FUN_OBJ_2(mod_ucrypto_mgs_base64_obj, mod_ucrypto_mgs_base64);
 
 mp_obj_t mod_ucrypto_mgs5_tpp(mp_obj_t data, mp_obj_t key) {
     mp_buffer_info_t bufinfo;
-    mp_get_buffer_raise(data, &bufinfo, MP_BUFFER_RW);
+    mp_get_buffer_raise(data, &bufinfo, MP_BUFFER_READ);
 
     mgs5tpp_encode_data(bufinfo.buf, bufinfo.len, mp_obj_int_get_truncated(key));
 
@@ -180,7 +180,7 @@ MP_DEFINE_CONST_FUN_OBJ_2(mod_ucrypto_mgs5_tpp_obj, mod_ucrypto_mgs5_tpp);
 
 mp_obj_t mod_ucrypto_rgg_studio(mp_obj_t data, mp_obj_t key) {
     mp_buffer_info_t bufinfo, keyinfo;
-    mp_get_buffer_raise(data, &bufinfo, MP_BUFFER_RW);
+    mp_get_buffer_raise(data, &bufinfo, MP_BUFFER_READ);
     mp_get_buffer_raise(key, &keyinfo, MP_BUFFER_READ);
 
     rgg_xor_data(bufinfo.buf, bufinfo.len, keyinfo.buf, keyinfo.len);
@@ -191,7 +191,7 @@ MP_DEFINE_CONST_FUN_OBJ_2(mod_ucrypto_rgg_studio_obj, mod_ucrypto_rgg_studio);
 
 mp_obj_t mod_ucrypto_mgs(mp_obj_t enc_mode, mp_obj_t data, mp_obj_t key) {
     mp_buffer_info_t bufinfo, keyinfo;
-    mp_get_buffer_raise(data, &bufinfo, MP_BUFFER_RW);
+    mp_get_buffer_raise(data, &bufinfo, MP_BUFFER_READ);
     mp_get_buffer_raise(key, &keyinfo, MP_BUFFER_READ);
 
     if (mp_obj_int_get_truncated(enc_mode))
@@ -207,7 +207,7 @@ MP_DEFINE_CONST_FUN_OBJ_3(mod_ucrypto_mgs_obj, mod_ucrypto_mgs);
 
 mp_obj_t mod_ucrypto_monster_hunter(mp_obj_t enc_mode, mp_obj_t data, mp_obj_t gver) {
     mp_buffer_info_t bufinfo;
-    mp_get_buffer_raise(data, &bufinfo, MP_BUFFER_RW);
+    mp_get_buffer_raise(data, &bufinfo, MP_BUFFER_READ);
 
     int ver = mp_obj_int_get_truncated(gver);
     if (ver != 2 && ver != 3) {
@@ -227,7 +227,7 @@ MP_DEFINE_CONST_FUN_OBJ_3(mod_ucrypto_monster_hunter_obj, mod_ucrypto_monster_hu
 
 mp_obj_t mod_ucrypto_aes_ecb(mp_obj_t enc_mode, mp_obj_t data, mp_obj_t key) {
     mp_buffer_info_t bufinfo, keyinfo;
-    mp_get_buffer_raise(data, &bufinfo, MP_BUFFER_RW);
+    mp_get_buffer_raise(data, &bufinfo, MP_BUFFER_READ);
     mp_get_buffer_raise(key, &keyinfo, MP_BUFFER_READ);
 
     if (mp_obj_int_get_truncated(enc_mode))
@@ -243,7 +243,7 @@ MP_DEFINE_CONST_FUN_OBJ_3(mod_ucrypto_aes_ecb_obj, mod_ucrypto_aes_ecb);
 
 mp_obj_t mod_ucrypto_aes_ctr(mp_obj_t data, mp_obj_t key, mp_obj_t iv) {
     mp_buffer_info_t bufinfo, keyinfo, ivinfo;
-    mp_get_buffer_raise(data, &bufinfo, MP_BUFFER_RW);
+    mp_get_buffer_raise(data, &bufinfo, MP_BUFFER_READ);
     mp_get_buffer_raise(key, &keyinfo, MP_BUFFER_READ);
     mp_get_buffer_raise(iv, &ivinfo, MP_BUFFER_READ);
 
@@ -255,7 +255,7 @@ MP_DEFINE_CONST_FUN_OBJ_3(mod_ucrypto_aes_ctr_obj, mod_ucrypto_aes_ctr);
 
 mp_obj_t mod_ucrypto_blowfish_ecb(mp_obj_t enc_mode, mp_obj_t data, mp_obj_t key) {
     mp_buffer_info_t bufinfo, keyinfo;
-    mp_get_buffer_raise(data, &bufinfo, MP_BUFFER_RW);
+    mp_get_buffer_raise(data, &bufinfo, MP_BUFFER_READ);
     mp_get_buffer_raise(key, &keyinfo, MP_BUFFER_READ);
 
     if (mp_obj_int_get_truncated(enc_mode))
@@ -271,7 +271,7 @@ MP_DEFINE_CONST_FUN_OBJ_3(mod_ucrypto_blowfish_ecb_obj, mod_ucrypto_blowfish_ecb
 
 mp_obj_t mod_ucrypto_camellia_ecb(mp_obj_t enc_mode, mp_obj_t data, mp_obj_t key) {
     mp_buffer_info_t bufinfo, keyinfo;
-    mp_get_buffer_raise(data, &bufinfo, MP_BUFFER_RW);
+    mp_get_buffer_raise(data, &bufinfo, MP_BUFFER_READ);
     mp_get_buffer_raise(key, &keyinfo, MP_BUFFER_READ);
 
     if (mp_obj_int_get_truncated(enc_mode))
@@ -287,7 +287,7 @@ MP_DEFINE_CONST_FUN_OBJ_3(mod_ucrypto_camellia_ecb_obj, mod_ucrypto_camellia_ecb
 
 mp_obj_t mod_ucrypto_des_ecb(mp_obj_t enc_mode, mp_obj_t data, mp_obj_t key) {
     mp_buffer_info_t bufinfo, keyinfo;
-    mp_get_buffer_raise(data, &bufinfo, MP_BUFFER_RW);
+    mp_get_buffer_raise(data, &bufinfo, MP_BUFFER_READ);
     mp_get_buffer_raise(key, &keyinfo, MP_BUFFER_READ);
 
     if (mp_obj_int_get_truncated(enc_mode))
@@ -303,7 +303,7 @@ MP_DEFINE_CONST_FUN_OBJ_3(mod_ucrypto_des_ecb_obj, mod_ucrypto_des_ecb);
 
 mp_obj_t mod_ucrypto_aes_cbc(size_t n_args, const mp_obj_t *args) {
     mp_buffer_info_t bufinfo, keyinfo, ivinfo;
-    mp_get_buffer_raise(args[1], &bufinfo, MP_BUFFER_RW);
+    mp_get_buffer_raise(args[1], &bufinfo, MP_BUFFER_READ);
     mp_get_buffer_raise(args[2], &keyinfo, MP_BUFFER_READ);
     mp_get_buffer_raise(args[3], &ivinfo, MP_BUFFER_READ);
 
@@ -320,7 +320,7 @@ MP_DEFINE_CONST_FUN_OBJ_VAR_BETWEEN(mod_ucrypto_aes_cbc_obj, 4, 4, mod_ucrypto_a
 
 mp_obj_t mod_ucrypto_blowfish_cbc(size_t n_args, const mp_obj_t *args) {
     mp_buffer_info_t bufinfo, keyinfo, ivinfo;
-    mp_get_buffer_raise(args[1], &bufinfo, MP_BUFFER_RW);
+    mp_get_buffer_raise(args[1], &bufinfo, MP_BUFFER_READ);
     mp_get_buffer_raise(args[2], &keyinfo, MP_BUFFER_READ);
     mp_get_buffer_raise(args[3], &ivinfo, MP_BUFFER_READ);
 
@@ -337,7 +337,7 @@ MP_DEFINE_CONST_FUN_OBJ_VAR_BETWEEN(mod_ucrypto_blowfish_cbc_obj, 4, 4, mod_ucry
 
 mp_obj_t mod_ucrypto_des3_cbc(size_t n_args, const mp_obj_t *args) {
     mp_buffer_info_t bufinfo, keyinfo, ivinfo;
-    mp_get_buffer_raise(args[1], &bufinfo, MP_BUFFER_RW);
+    mp_get_buffer_raise(args[1], &bufinfo, MP_BUFFER_READ);
     mp_get_buffer_raise(args[2], &keyinfo, MP_BUFFER_READ);
     mp_get_buffer_raise(args[3], &ivinfo, MP_BUFFER_READ);
 
