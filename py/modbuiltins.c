@@ -41,7 +41,7 @@
 #include <math.h>
 #endif
 
-#if MICROPY_PY_IO
+#if MICROPY_PY_IO_STDOUT
 extern struct _mp_dummy_t mp_sys_stdout_obj; // type is irrelevant, just need pointer
 #endif
 
@@ -397,7 +397,7 @@ STATIC mp_obj_t mp_builtin_print(size_t n_args, const mp_obj_t *args, mp_map_t *
     if (end_elem != NULL && end_elem->value != mp_const_none) {
         end_data = mp_obj_str_get_data(end_elem->value, &end_len);
     }
-    #if MICROPY_PY_IO
+    #if MICROPY_PY_IO_STDOUT
     void *stream_obj = &mp_sys_stdout_obj;
     mp_map_elem_t *file_elem = mp_map_lookup(kwargs, MP_OBJ_NEW_QSTR(MP_QSTR_file), MP_MAP_LOOKUP);
     if (file_elem != NULL && file_elem->value != mp_const_none) {
@@ -408,19 +408,19 @@ STATIC mp_obj_t mp_builtin_print(size_t n_args, const mp_obj_t *args, mp_map_t *
     #endif
     for (mp_uint_t i = 0; i < n_args; i++) {
         if (i > 0) {
-            #if MICROPY_PY_IO
+            #if MICROPY_PY_IO_STDOUT
             mp_stream_write_adaptor(stream_obj, sep_data, sep_len);
             #else
             mp_print_strn(&mp_plat_print, sep_data, sep_len, 0, 0, 0);
             #endif
         }
-        #if MICROPY_PY_IO
+        #if MICROPY_PY_IO_STDOUT
         mp_obj_print_helper(&print, args[i], PRINT_STR);
         #else
         mp_obj_print_helper(&mp_plat_print, args[i], PRINT_STR);
         #endif
     }
-    #if MICROPY_PY_IO
+    #if MICROPY_PY_IO_STDOUT
     mp_stream_write_adaptor(stream_obj, end_data, end_len);
     #else
     mp_print_strn(&mp_plat_print, end_data, end_len, 0, 0, 0);
@@ -431,7 +431,7 @@ MP_DEFINE_CONST_FUN_OBJ_KW(mp_builtin_print_obj, 0, mp_builtin_print);
 
 STATIC mp_obj_t mp_builtin___repl_print__(mp_obj_t o) {
     if (o != mp_const_none) {
-        #if MICROPY_PY_IO
+        #if MICROPY_PY_IO_STDOUT
         mp_obj_print_helper(&mp_sys_stdout_print, o, PRINT_REPR);
         mp_print_str(&mp_sys_stdout_print, "\n");
         #else
