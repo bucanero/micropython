@@ -941,7 +941,7 @@ STATIC const mp_rom_map_elem_t mp_module_hashlib_globals_table[] = {
     { MP_ROM_QSTR(MP_QSTR_jenkins_oaat), MP_ROM_PTR(&mod_uhashlib_jenkins_oaat_obj) },
     { MP_ROM_QSTR(MP_QSTR_lookup3_little2), MP_ROM_PTR(&mod_uhashlib_lookup3_little2_obj) },
     { MP_ROM_QSTR(MP_QSTR_djb2), MP_ROM_PTR(&mod_uhashlib_djb2_obj) },
-    { MP_ROM_QSTR(MP_QSTR_eachecksum), MP_ROM_PTR(&mod_uhashlib_eachecksum_obj) },
+    { MP_ROM_QSTR(MP_QSTR_ea_checksum), MP_ROM_PTR(&mod_uhashlib_eachecksum_obj) },
     { MP_ROM_QSTR(MP_QSTR_ffx_checksum), MP_ROM_PTR(&mod_uhashlib_ffx_checksum_obj) },
     { MP_ROM_QSTR(MP_QSTR_ff13_checksum), MP_ROM_PTR(&mod_uhashlib_ff13_checksum_obj) },
     { MP_ROM_QSTR(MP_QSTR_kh25_checksum), MP_ROM_PTR(&mod_uhashlib_kh25_checksum_obj) },
