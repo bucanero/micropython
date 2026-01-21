@@ -73,7 +73,7 @@ mp_obj_t mod_ucrypto_diablo3(mp_obj_t enc_mode, mp_obj_t data) {
         // decryption mode
         diablo_decrypt_data(bufinfo.buf, bufinfo.len);
 
-    return enc_mode;
+    return data;
 }
 MP_DEFINE_CONST_FUN_OBJ_2(mod_ucrypto_diablo3_obj, mod_ucrypto_diablo3);
 
@@ -88,7 +88,7 @@ mp_obj_t mod_ucrypto_silent_hill3(mp_obj_t enc_mode, mp_obj_t data) {
         // decryption mode
         sh3_decrypt_data(bufinfo.buf, bufinfo.len);
 
-    return enc_mode;
+    return data;
 }
 MP_DEFINE_CONST_FUN_OBJ_2(mod_ucrypto_silent_hill3_obj, mod_ucrypto_silent_hill3);
 
@@ -103,7 +103,7 @@ mp_obj_t mod_ucrypto_nfs_undercover(mp_obj_t enc_mode, mp_obj_t data) {
         // decryption mode
         nfsu_decrypt_data(bufinfo.buf, bufinfo.len);
 
-    return enc_mode;
+    return data;
 }
 MP_DEFINE_CONST_FUN_OBJ_2(mod_ucrypto_nfs_undercover_obj, mod_ucrypto_nfs_undercover);
 
@@ -119,7 +119,7 @@ mp_obj_t mod_ucrypto_final_fantasy13(size_t n_args, const mp_obj_t *args) {
         // decryption mode
         ff13_decrypt_data(mp_obj_int_get_truncated(args[3]), bufinfo.buf, bufinfo.len, keyinfo.buf, keyinfo.len);
 
-    return args[0];
+    return args[1];
 }
 MP_DEFINE_CONST_FUN_OBJ_VAR_BETWEEN(mod_ucrypto_final_fantasy13_obj, 4, 4, mod_ucrypto_final_fantasy13);
 
@@ -134,7 +134,7 @@ mp_obj_t mod_ucrypto_borderlands3(mp_obj_t enc_mode, mp_obj_t data, mp_obj_t typ
         // decryption mode
         borderlands3_Decrypt(bufinfo.buf, bufinfo.len, mp_obj_int_get_truncated(type));
 
-    return enc_mode;
+    return data;
 }
 MP_DEFINE_CONST_FUN_OBJ_3(mod_ucrypto_borderlands3_obj, mod_ucrypto_borderlands3);
 
@@ -149,7 +149,7 @@ mp_obj_t mod_ucrypto_mgs_pw(mp_obj_t enc_mode, mp_obj_t data) {
         // decryption mode
         mgspw_Decrypt(bufinfo.buf, bufinfo.len);
 
-    return enc_mode;
+    return data;
 }
 MP_DEFINE_CONST_FUN_OBJ_2(mod_ucrypto_mgs_pw_obj, mod_ucrypto_mgs_pw);
 
@@ -164,7 +164,7 @@ mp_obj_t mod_ucrypto_mgs_base64(mp_obj_t enc_mode, mp_obj_t data) {
         // decryption mode
         mgs_DecodeBase64(bufinfo.buf, bufinfo.len);
 
-    return enc_mode;
+    return data;
 }
 MP_DEFINE_CONST_FUN_OBJ_2(mod_ucrypto_mgs_base64_obj, mod_ucrypto_mgs_base64);
 
@@ -221,7 +221,7 @@ mp_obj_t mod_ucrypto_monster_hunter(mp_obj_t enc_mode, mp_obj_t data, mp_obj_t g
         // decryption mode
         monsterhunter_decrypt_data(bufinfo.buf, bufinfo.len, ver);
 
-    return enc_mode;
+    return data;
 }
 MP_DEFINE_CONST_FUN_OBJ_3(mod_ucrypto_monster_hunter_obj, mod_ucrypto_monster_hunter);
 
@@ -314,7 +314,7 @@ mp_obj_t mod_ucrypto_aes_cbc(size_t n_args, const mp_obj_t *args) {
         // decryption mode
         aes_cbc_decrypt(bufinfo.buf, bufinfo.len, keyinfo.buf, keyinfo.len, ivinfo.buf, ivinfo.len);
 
-    return args[0];
+    return args[1];
 }
 MP_DEFINE_CONST_FUN_OBJ_VAR_BETWEEN(mod_ucrypto_aes_cbc_obj, 4, 4, mod_ucrypto_aes_cbc);
 
@@ -331,7 +331,7 @@ mp_obj_t mod_ucrypto_blowfish_cbc(size_t n_args, const mp_obj_t *args) {
         // decryption mode
         blowfish_cbc_decrypt(bufinfo.buf, bufinfo.len, keyinfo.buf, keyinfo.len, ivinfo.buf, ivinfo.len);
 
-    return args[0];
+    return args[1];
 }
 MP_DEFINE_CONST_FUN_OBJ_VAR_BETWEEN(mod_ucrypto_blowfish_cbc_obj, 4, 4, mod_ucrypto_blowfish_cbc);
 
@@ -348,7 +348,7 @@ mp_obj_t mod_ucrypto_des3_cbc(size_t n_args, const mp_obj_t *args) {
         // decryption mode
         des3_cbc_decrypt(bufinfo.buf, bufinfo.len, keyinfo.buf, keyinfo.len, ivinfo.buf, ivinfo.len);
 
-    return args[0];
+    return args[1];
 }
 MP_DEFINE_CONST_FUN_OBJ_VAR_BETWEEN(mod_ucrypto_des3_cbc_obj, 4, 4, mod_ucrypto_des3_cbc);
 

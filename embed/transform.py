@@ -196,10 +196,11 @@ c_functions = (
     "mgspw_Checksum",
     "md5_xor_hash",
     "sha1_xor64_hash",
-    "ripemd160",
     "md5",
     "sha1",
     "sha1_hmac",
+    "pbkdf2_sha1",
+    "pbkdf2_sha256",
     "sha256",
     "sha512",
     #crypto

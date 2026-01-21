@@ -32,7 +32,6 @@ extern void sha1( const unsigned char *input, size_t ilen, unsigned char output[
 extern void sha256( const unsigned char *input, size_t ilen, unsigned char output[32], int is224 );
 extern void sha512( const unsigned char *input, size_t ilen, unsigned char output[64], int is384 );
 extern void md5( const unsigned char *input, size_t ilen, unsigned char output[16] );
-extern void ripemd160( const unsigned char *input, size_t ilen, unsigned char output[20] );
 extern void sha1_hmac( const unsigned char *key, size_t keylen, const unsigned char *input, size_t ilen, unsigned char output[20] );
 
 //---  Custom game checksum functions ---//
@@ -66,6 +65,8 @@ MP_DECLARE_CONST_FUN_OBJ(mod_uhashlib_sha256_obj);
 MP_DECLARE_CONST_FUN_OBJ(mod_uhashlib_sha384_obj);
 MP_DECLARE_CONST_FUN_OBJ(mod_uhashlib_sha512_obj);
 MP_DECLARE_CONST_FUN_OBJ(mod_uhashlib_hmac_sha1_obj);
+MP_DECLARE_CONST_FUN_OBJ(mod_uhashlib_pbkdf2_sha1_obj);
+MP_DECLARE_CONST_FUN_OBJ(mod_uhashlib_pbkdf2_sha256_obj);
 MP_DECLARE_CONST_FUN_OBJ(mod_uhashlib_sha1_xor64_obj);
 MP_DECLARE_CONST_FUN_OBJ(mod_uhashlib_adler16_obj);
 MP_DECLARE_CONST_FUN_OBJ(mod_uhashlib_adler32_obj);
@@ -518,6 +519,42 @@ mp_obj_t mod_uhashlib_hmac_sha1(mp_obj_t key, mp_obj_t data) {
 }
 MP_DEFINE_CONST_FUN_OBJ_2(mod_uhashlib_hmac_sha1_obj, mod_uhashlib_hmac_sha1);
 
+mp_obj_t mod_uhashlib_pbkdf2_sha1(size_t n_args, const mp_obj_t *args) {
+    uint8_t out[0x200];
+    mp_buffer_info_t pwdinfo, saltinfo;
+    mp_get_buffer_raise(args[0], &pwdinfo, MP_BUFFER_READ);
+    mp_get_buffer_raise(args[1], &saltinfo, MP_BUFFER_READ);
+
+    int iter = mp_obj_int_get_truncated(args[2]);
+    int dklen = mp_obj_int_get_truncated(args[3]);
+    dklen = MIN(dklen, sizeof(out));
+
+    if (pbkdf2_sha1(pwdinfo.buf, pwdinfo.len, saltinfo.buf, saltinfo.len, iter, out, dklen) != 0) {
+        nlr_raise(mp_obj_new_exception_msg_varg(&mp_type_ValueError, "PBKDF2-SHA1 failed"));
+    }
+
+    return mp_obj_new_bytearray(dklen, out);
+}
+MP_DEFINE_CONST_FUN_OBJ_VAR_BETWEEN(mod_uhashlib_pbkdf2_sha1_obj, 4, 4, mod_uhashlib_pbkdf2_sha1);
+
+mp_obj_t mod_uhashlib_pbkdf2_sha256(size_t n_args, const mp_obj_t *args) {
+    uint8_t out[0x200];
+    mp_buffer_info_t pwdinfo, saltinfo;
+    mp_get_buffer_raise(args[0], &pwdinfo, MP_BUFFER_READ);
+    mp_get_buffer_raise(args[1], &saltinfo, MP_BUFFER_READ);
+
+    int iter = mp_obj_int_get_truncated(args[2]);
+    int dklen = mp_obj_int_get_truncated(args[3]);
+    dklen = MIN(dklen, sizeof(out));
+
+    if (pbkdf2_sha256(pwdinfo.buf, pwdinfo.len, saltinfo.buf, saltinfo.len, iter, out, dklen) != 0) {
+        nlr_raise(mp_obj_new_exception_msg_varg(&mp_type_ValueError, "PBKDF2-SHA256 failed"));
+    }
+
+    return mp_obj_new_bytearray(dklen, out);
+}
+MP_DEFINE_CONST_FUN_OBJ_VAR_BETWEEN(mod_uhashlib_pbkdf2_sha256_obj, 4, 4, mod_uhashlib_pbkdf2_sha256);
+
 mp_obj_t mod_uhashlib_jenkins_oaat(size_t n_args, const mp_obj_t *args) {
     uint8_t out[4];
     mp_buffer_info_t bufinfo;
@@ -922,6 +959,8 @@ STATIC const mp_rom_map_elem_t mp_module_hashlib_globals_table[] = {
     { MP_ROM_QSTR(MP_QSTR_sha384), MP_ROM_PTR(&mod_uhashlib_sha384_obj) },
     { MP_ROM_QSTR(MP_QSTR_sha512), MP_ROM_PTR(&mod_uhashlib_sha512_obj) },
     { MP_ROM_QSTR(MP_QSTR_hmac_sha1), MP_ROM_PTR(&mod_uhashlib_hmac_sha1_obj) },
+    { MP_ROM_QSTR(MP_QSTR_pbkdf2_sha1), MP_ROM_PTR(&mod_uhashlib_pbkdf2_sha1_obj) },
+    { MP_ROM_QSTR(MP_QSTR_pbkdf2_sha256), MP_ROM_PTR(&mod_uhashlib_pbkdf2_sha256_obj) },
     { MP_ROM_QSTR(MP_QSTR_sha1_xor64), MP_ROM_PTR(&mod_uhashlib_sha1_xor64_obj) },
     { MP_ROM_QSTR(MP_QSTR_adler16), MP_ROM_PTR(&mod_uhashlib_adler16_obj) },
     { MP_ROM_QSTR(MP_QSTR_adler32), MP_ROM_PTR(&mod_uhashlib_adler32_obj) },
