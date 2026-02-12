@@ -45,23 +45,27 @@
 #define MICROPY_PY_GC               (1)
 #define MICROPY_PY_ARRAY            (1)
 #define MICROPY_PY_COLLECTIONS      (1)
-#define MICROPY_PY_MATH             (0)
+#define MICROPY_PY_COLLECTIONS_ORDEREDDICT (1)
+#define MICROPY_PY_MATH             (1)
 #define MICROPY_PY_CMATH            (0)
-#define MICROPY_PY_IO               (0)
+#define MICROPY_PY_IO               (1)
 #define MICROPY_PY_STRUCT           (1)
 #define MICROPY_PY_SYS              (1)
-#define MICROPY_PY_SYS_EXIT         (1)
-#define MICROPY_PY_SYS_PLATFORM     "linux"
+#define MICROPY_PY_SYS_EXIT         (0)
+#define MICROPY_PY_SYS_PLATFORM     "apollo-playstation"
 #define MICROPY_PY_SYS_MAXSIZE      (1)
 
 #define MICROPY_PY_UCTYPES          (1)
-#define MICROPY_PY_UZLIB            (0) // tinf has callback without state
+#define MICROPY_PY_UZLIB            (1)
 #define MICROPY_PY_UJSON            (1)
 #define MICROPY_PY_URE              (1)
 #define MICROPY_PY_UHEAPQ           (1)
 #define MICROPY_PY_UHASHLIB         (1)
 #define MICROPY_PY_UBINASCII        (1)
-#define MICROPY_PY_MACHINE          (1)
+#define MICROPY_PY_UCRYPTO          (1)
+#define MICROPY_PY_UTIME            (1)
+#define MICROPY_PY_APOLLO           (1)
+#define MICROPY_PY_MACHINE          (0)
 
 extern const struct _mp_obj_module_t mp_module_os;
 extern const struct _mp_obj_module_t mp_module_time;
@@ -109,8 +113,12 @@ extern const struct _mp_obj_fun_builtin_t mp_builtin_open_obj;
 
 #endif
 
+#if defined(_MSC_VER) || defined(__MINGW32__) || defined(__MINGW64__)
+#include <malloc.h> // alloca is in malloc.h on Windows
+#else
 // We need to provide a declaration/definition of alloca()
 #include <alloca.h>
+#endif
 
 int mp_hal_stdin_rx_chr(void);
 void mp_hal_stdout_tx_str(const char *str);
@@ -119,8 +127,8 @@ void mp_hal_stdout_tx_strn_cooked(const char *str, mp_uint_t len);
 
 static inline void mp_hal_set_interrupt_char(char c) {}
 
-#define MICROPY_HW_BOARD_NAME "minimal"
-#define MICROPY_HW_MCU_NAME "unknown-cpu"
+#define MICROPY_HW_BOARD_NAME "apollo"
+#define MICROPY_HW_MCU_NAME "playstation-cpu"
 
 #ifdef __linux__
 #define MICROPY_MIN_USE_STDOUT (1)

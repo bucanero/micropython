@@ -11,6 +11,14 @@ void micropy_gc_collect(mp_state_ctx_t *mp) {
 }
 
 uint micropy_import_stat(mp_state_ctx_t *mp, const char *path) {
+    struct stat buf;
+    if (stat(path, &buf) == 0) {
+        if (buf.st_mode & S_IFDIR)
+            return MP_IMPORT_STAT_DIR;
+
+        return MP_IMPORT_STAT_FILE;
+    }
+
     return MP_IMPORT_STAT_NO_EXIST;
 }
 
@@ -19,12 +27,10 @@ void micropy_nlr_jump_fail(mp_state_ctx_t *mp, void *val) {
     exit(1);
 }
 
-/*
 mp_obj_t mp_builtin_open(mp_state_ctx_t *mp, mp_uint_t n_args, const mp_obj_t *args, mp_map_t *kwargs) {
     micropy_nlr_raise(mp, micropy_obj_new_exception_msg(mp, &mp_type_OSError, "open() not implemented"));
 }
 MP_DEFINE_CONST_FUN_OBJ_KW(mp_builtin_open_obj, 1, mp_builtin_open);
-*/
 
 mp_state_ctx_t *micropy_create(void *heap, size_t heap_size) {
     mp_state_ctx_t *mp = heap;
