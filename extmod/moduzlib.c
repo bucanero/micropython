@@ -43,7 +43,7 @@
  * @return True on success, False on failure
  */
 
- bool micropy_decompress_buffer_dynamic(struct _mp_state_ctx_t *mp_state, 
+STATIC bool micropy_decompress_buffer_dynamic(struct _mp_state_ctx_t *mp_state, 
     const unsigned char* compressed_data, size_t compressed_size,
     vstr_t* decompressed,
     int window_bits)
@@ -110,7 +110,7 @@
 /**
  * @brief Helper function to compress data
  */
-bool micropy_compress_buffer(struct _mp_state_ctx_t *mp_state, 
+STATIC bool micropy_compress_buffer(struct _mp_state_ctx_t *mp_state, 
     const unsigned char* data, size_t data_size,
     vstr_t* compressed_out,
     int wbits, int level)
@@ -294,6 +294,8 @@ STATIC mp_obj_t mod_uzlib_packzip(mp_obj_t data, mp_obj_t oz_tuple, mp_obj_t oz_
         memset(out.buf + oz_offset, 0, MIN(bufinfo.len - oz_offset, oz_ziplen));
     }
     memcpy(out.buf + oz_offset, vzip.buf, vzip.len);
+    items[1] = mp_obj_new_int_from_uint(vzip.len);
+    items[2] = mp_obj_new_int_from_uint(ozdinfo.len);
 
     return mp_obj_new_str_from_vstr(&mp_type_bytes, &out);
 }
